@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="build-version" content="01.00w">
+  <meta name="build-version" content="01.01w">
   <title>YOUR_PROJECT_TITLE</title>
   <style>
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -44,18 +44,26 @@
     // Show/hide: set to false to hide the website version indicator
     var SHOW_WEB_VERSION = true;
 
-    // AudioContext for sound playback
+    // AudioContext for sound playback — created at load to probe browser audio policy
     var _audioCtx = null;
-    function unlockAudio() {
-      if (!_audioCtx) {
-        _audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        var buf = _audioCtx.createBuffer(1, 1, 22050);
-        var src = _audioCtx.createBufferSource();
-        src.buffer = buf;
-        src.connect(_audioCtx.destination);
-        src.start(0);
+    try { _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
+    if (_audioCtx) _audioCtx.onstatechange = function() { updateAudioStatus(); };
+
+    function updateAudioStatus() {
+      var el = document.getElementById('audio-status');
+      if (!el) return;
+      if (_audioCtx && _audioCtx.state === 'running') {
+        el.textContent = '\u{1F50A}';
+        el.title = 'Sound ready';
+      } else {
+        el.textContent = '\u{1F507}';
+        el.title = 'Sound muted - click page to enable';
       }
-      if (_audioCtx.state === 'suspended') _audioCtx.resume();
+    }
+
+    function unlockAudio() {
+      if (!_audioCtx || _audioCtx.state === 'running') return;
+      _audioCtx.resume().then(function() { updateAudioStatus(); }).catch(function() {});
     }
     document.addEventListener('click', unlockAudio, { once: false });
     document.addEventListener('touchstart', unlockAudio, { once: false });
@@ -89,13 +97,18 @@
     cacheSound('sounds/Website_Ready_Voice_1.mp3', 'web-sound-data');
 
     // Show splash + play sound on update-triggered reloads
+    var _soundPlayed = false;
     if (sessionStorage.getItem('web-pending-sound')) {
       sessionStorage.removeItem('web-pending-sound');
       if (navigator.vibrate) navigator.vibrate(200);
       var splash = document.getElementById('splash-green');
-      var soundData = localStorage.getItem('web-sound-data');
-      if (soundData) { playSoundFromDataUrl(soundData); }
-      else { var a = new Audio('sounds/Website_Ready_Voice_1.mp3'); a.play().catch(function() {}); }
+      // Only play sound once and only if audio is unlocked
+      if (_audioCtx && _audioCtx.state === 'running' && !_soundPlayed) {
+        _soundPlayed = true;
+        var soundData = localStorage.getItem('web-sound-data');
+        if (soundData) { playSoundFromDataUrl(soundData); }
+        else { var a = new Audio('sounds/Website_Ready_Voice_1.mp3'); a.play().catch(function() {}); }
+      }
       if (splash) {
         splash.style.display = 'flex';
         setTimeout(function() {
@@ -114,8 +127,9 @@
 
       var indicator = document.createElement('div');
       indicator.id = 'version-indicator';
-      indicator.innerHTML = '<span class="dot"></span><span class="label">v' + currentVersion + '</span>';
+      indicator.innerHTML = '<span class="dot"></span><span class="label">v' + currentVersion + '</span><span id="audio-status"></span>';
       if (SHOW_WEB_VERSION) document.body.appendChild(indicator);
+      updateAudioStatus();
       var dot = indicator.querySelector('.dot');
 
       function checkForUpdate() {
