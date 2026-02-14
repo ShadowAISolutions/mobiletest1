@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="build-version" content="01.02w">
+  <meta name="build-version" content="01.03w">
   <title>YOUR_PROJECT_TITLE</title>
   <style>
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -134,7 +134,7 @@
       }
     }
 
-    // Auto-refresh: poll own HTML every 10s for build-version changes
+    // Auto-refresh: poll version.txt every 10s for build-version changes
     (function() {
       var POLL_INTERVAL = 10000;
       var currentVersion = (document.querySelector('meta[name="build-version"]') || {}).content;
@@ -150,13 +150,17 @@
       if (_resumePromise) _resumePromise.then(function() { updateAudioStatus(); });
       var dot = indicator.querySelector('.dot');
 
+      // Resolve version.txt URL relative to the current page
+      var basePath = window.location.href.split('?')[0];
+      var versionUrl = basePath.substring(0, basePath.lastIndexOf('/') + 1) + 'version.txt';
+
       function checkForUpdate() {
         dot.className = 'dot checking';
-        fetch(window.location.href.split('?')[0] + '?_cb=' + Date.now(), { cache: 'no-store' })
+        fetch(versionUrl + '?_cb=' + Date.now(), { cache: 'no-store' })
           .then(function(res) { return res.text(); })
-          .then(function(html) {
-            var match = html.match(/<meta\s+name="build-version"\s+content="([^"]+)"/);
-            if (match && match[1] !== currentVersion) {
+          .then(function(v) {
+            var remoteVersion = v.trim();
+            if (remoteVersion && remoteVersion !== currentVersion) {
               dot.className = 'dot found';
               indicator.querySelector('.label').textContent = 'Updating...';
               sessionStorage.setItem('web-pending-sound', '1');
