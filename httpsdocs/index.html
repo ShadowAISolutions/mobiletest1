@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="build-version" content="01.04w">
+  <meta name="build-version" content="01.05w">
   <title>YOUR_PROJECT_TITLE</title>
   <style>
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -94,7 +94,8 @@
       if (navigator.vibrate) navigator.vibrate(200);
       var splash = document.getElementById('splash-green');
       var soundData = localStorage.getItem('web-sound-data');
-      if (soundData) playSoundFromDataUrl(soundData);
+      if (soundData) { playSoundFromDataUrl(soundData); }
+      else { var a = new Audio('sounds/Website_Ready_Voice_1.mp3'); a.play().catch(function() {}); }
       if (splash) {
         splash.style.display = 'flex';
         setTimeout(function() {
