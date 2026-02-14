@@ -101,3 +101,4 @@ When a GAS app embedded in a GitHub Pages iframe needs Google sign-in (e.g. to r
 |---|---|---|
 | `gas-needs-auth` | GAS iframe → parent | Tells parent to show sign-in wall (includes `authStatus`, `email`) |
 | `gas-auth-complete` | GAS iframe → parent | Tells parent auth succeeded (hides wall, reloads iframe) |
+
