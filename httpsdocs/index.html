@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="build-version" content="01.13w">
+  <meta name="build-version" content="01.14w">
   <title>YOUR_PROJECT_TITLE</title>
   <style>
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -73,23 +73,17 @@
     function playSoundFromDataUrl(dataUrl) {
       try {
         var ctx = _audioCtx || new (window.AudioContext || window.webkitAudioContext)();
+        if (ctx.state !== 'running') return;
         var base64 = dataUrl.split(',')[1];
         var binary = atob(base64);
         var bytes = new Uint8Array(binary.length);
         for (var i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
-        var _decode = function() {
-          ctx.decodeAudioData(bytes.buffer, function(audioBuffer) {
-            var source = ctx.createBufferSource();
-            source.buffer = audioBuffer;
-            source.connect(ctx.destination);
-            source.start(0);
-          });
-        };
-        if (ctx.state === 'suspended') {
-          ctx.resume().then(function() { updateAudioStatus(); _decode(); }).catch(function() {});
-        } else {
-          _decode();
-        }
+        ctx.decodeAudioData(bytes.buffer, function(audioBuffer) {
+          var source = ctx.createBufferSource();
+          source.buffer = audioBuffer;
+          source.connect(ctx.destination);
+          source.start(0);
+        });
       } catch(e) {}
     }
 
@@ -110,12 +104,20 @@
       sessionStorage.removeItem('web-pending-sound');
       if (navigator.vibrate) navigator.vibrate(200);
       var splash = document.getElementById('splash-green');
-      // Attempt to play sound — resume AudioContext if needed (prior gesture carries forward)
+      // Play sound only if AudioContext is running (or becomes running via auto-resume)
       if (_audioCtx && !_soundPlayed) {
         _soundPlayed = true;
-        var soundData = localStorage.getItem('web-sound-data');
-        if (soundData) { playSoundFromDataUrl(soundData); }
-        else { var a = new Audio('sounds/Website_Ready_Voice_1.mp3'); a.play().catch(function() {}); }
+        var _playNow = function() {
+          var soundData = localStorage.getItem('web-sound-data');
+          if (soundData) { playSoundFromDataUrl(soundData); }
+          else { var a = new Audio('sounds/Website_Ready_Voice_1.mp3'); a.play().catch(function() {}); }
+        };
+        if (_audioCtx.state === 'running') {
+          _playNow();
+        } else {
+          // Give auto-resume (line 52) a moment to settle, then play only if it succeeded
+          setTimeout(function() { if (_audioCtx.state === 'running') _playNow(); }, 500);
+        }
       }
       if (splash) {
         splash.style.display = 'flex';
