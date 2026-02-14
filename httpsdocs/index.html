@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="build-version" content="01.16w">
+  <meta name="build-version" content="01.17w">
   <title>YOUR_PROJECT_TITLE</title>
   <style>
     html, body { margin: 0; padding: 0; height: 100%; }
@@ -49,7 +49,8 @@
     try { _audioCtx = new (window.AudioContext || window.webkitAudioContext)(); } catch(e) {}
     if (_audioCtx) _audioCtx.onstatechange = function() { updateAudioStatus(); };
     // Attempt auto-resume — browsers allow it if a prior gesture exists for this origin
-    if (_audioCtx && _audioCtx.state === 'suspended') _audioCtx.resume().catch(function() {});
+    var _resumePromise = null;
+    if (_audioCtx && _audioCtx.state === 'suspended') _resumePromise = _audioCtx.resume().catch(function() {});
 
     function updateAudioStatus() {
       var el = document.getElementById('audio-status');
@@ -140,6 +141,8 @@
       indicator.innerHTML = '<span class="dot"></span><span class="label">v' + currentVersion + '</span><span id="audio-status"></span>';
       if (SHOW_WEB_VERSION) document.body.appendChild(indicator);
       updateAudioStatus();
+      // Catch the case where onstatechange fired before the element existed
+      if (_resumePromise) _resumePromise.then(function() { updateAudioStatus(); });
       var dot = indicator.querySelector('.dot');
 
       function checkForUpdate() {
