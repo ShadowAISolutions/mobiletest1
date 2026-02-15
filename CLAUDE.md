@@ -44,6 +44,10 @@ These checks catch template drift that accumulates when the repo is cloned/forke
 > - **GitHub Pages deployment is skipped** — the workflow's `deploy` job checks `github.event.repository.name != 'autoupdatehtmltemplate'` and won't run on the template repo
 > - Pre-Commit items #4, #6, #8, #10 still apply normally
 
+---
+> **--- END OF TEMPLATE REPO GUARD ---**
+---
+
 ## Pre-Commit Checklist
 **Before every commit, verify ALL of the following:**
 
@@ -63,6 +67,10 @@ These checks catch template drift that accumulates when the repo is cloned/forke
 - When adding new rules to CLAUDE.md, add the actionable check to the appropriate checklist and put supporting details in a reference section — do not duplicate the rule in both places
 - When editing CLAUDE.md, check whether any existing reference section restates a checklist item — if so, remove the duplicate and add a `*Rule: see ... Checklist item #N*` pointer instead
 
+---
+> **--- END OF PRE-COMMIT CHECKLIST ---**
+---
+
 ## Template Variables
 
 These variables are the **single source of truth** for repo-specific values. When a variable value is changed here, Claude Code must propagate the new value to every file in the repo that uses it.
@@ -79,6 +87,10 @@ These variables are the **single source of truth** for repo-specific values. Whe
 - **In code files** (HTML, YAML, Markdown, etc.): use the **resolved value** (e.g. write `ShadowAISolutions`, not `YOUR_ORG_NAME`)
 - **In CLAUDE.md instructions**: the placeholder names (`YOUR_ORG_NAME`, etc.) may appear in examples and rules — Claude Code resolves them using the table above
 
+---
+> **--- END OF TEMPLATE VARIABLES ---**
+---
+
 ## Version Bumping
 *Rule: see Pre-Commit Checklist item #1. Reference details below.*
 - The `VERSION` variable is near the top of each `.gs` file (look for `var VERSION = "..."`)
@@ -91,6 +103,10 @@ Each GAS project has a code file and a corresponding embedding page. Register th
 | Project | Code File | Embedding Page |
 |---------|-----------|----------------|
 | *(Project name)* | `googleAppsScripts/<Project Name>/<CodeFile>.gs` | `live-site-pages/<page-name>.html` |
+
+---
+> **--- END OF VERSION BUMPING ---**
+---
 
 ## Build Version (Auto-Refresh for embedding pages)
 *Rules: see Pre-Commit Checklist items #2, #3, #4. Reference details below.*
@@ -144,12 +160,20 @@ live-site-pages/
 ```
 For pages that live directly in `live-site-pages/` (not in a subdirectory), the version file and `sounds/` folder sit alongside the HTML file (e.g. `live-site-pages/index.html` + `live-site-pages/index.version.txt`).
 
+---
+> **--- END OF BUILD VERSION ---**
+---
+
 ## Commit Message Naming
 *Rule: see Pre-Commit Checklist item #9. Reference details below.*
 - Both version types use the `v` prefix — suffix indicates type: `g` = Google Apps Script, `w` = website
 - If neither a `.gs` file nor an embedding HTML page was updated: no version prefix needed
 - Example: `v01.19g Fix sign-in popup to auto-close after authentication`
 - Example: `v01.19g v01.12w Add auth wall with build version bump`
+
+---
+> **--- END OF COMMIT MESSAGE NAMING ---**
+---
 
 ## GAS Code Constraints
 - **All GAS `.gs` code must be valid Google Apps Script syntax** — test mentally that strings, escapes, and quotes parse correctly before committing
@@ -163,11 +187,19 @@ For pages that live directly in `live-site-pages/` (not in a subdirectory), the 
   5. If the returned version differs from the version displayed in `#gv`, it sends a `gas-reload` postMessage to the parent embedding page
   6. The embedding page receives the message, sets session storage flags, reloads, and shows the blue "Code Ready" splash
 
+---
+> **--- END OF GAS CODE CONSTRAINTS ---**
+---
+
 ## Race Conditions — Config vs. Data Fetch
 - **Never fire `saveConfig` and a dependent data-fetch (`getFormData`) in parallel** — the data-fetch may read stale config values from the sheet
 - When the client switches a config value (e.g. year) and needs fresh data for that value, **pass the value directly as a parameter** to the server function (e.g. `getFormData(_token, year)`) rather than relying on `saveConfig` completing first
 - Server functions that read config should accept optional override parameters (e.g. `opt_yearOverride`) so the client can bypass the saved config when needed
 - This pattern avoids race conditions without needing to chain callbacks (which adds latency)
+
+---
+> **--- END OF RACE CONDITIONS ---**
+---
 
 ## API Call Optimization (Scaling Goal)
 - **Minimize Google API calls** in every GAS function — the app is designed to scale to many users
@@ -177,10 +209,18 @@ For pages that live directly in `live-site-pages/` (not in a subdirectory), the 
 - When adding new server-side functions, always consider: can this result be cached? Can I reuse an already-opened spreadsheet object? Avoid redundant `UrlFetchApp` or `SpreadsheetApp` calls
 - Cache TTLs are intentionally short (5–10 min) so permission changes and token revocations take effect quickly
 
+---
+> **--- END OF API CALL OPTIMIZATION ---**
+---
+
 ## UI Dialogs — No Browser Defaults
 - **Never use `alert()`, `confirm()`, or `prompt()`** — all confirmation dialogs, alerts, and input prompts must use custom styled HTML/CSS modals
 - This applies to both GAS `.gs` code and parent embedding pages (`.html`)
 - Use overlay + modal patterns consistent with the existing sheet/modal styles in the codebase
+
+---
+> **--- END OF UI DIALOGS ---**
+---
 
 ## Phantom Edit (Timestamp Alignment)
 - When the user asks for a **phantom edit** or **phantom update**, touch every file in the repo with a no-op change so all files share the same commit timestamp on GitHub
@@ -190,10 +230,18 @@ For pages that live directly in `live-site-pages/` (not in a subdirectory), the 
 - **Reset `repository-information/CHANGELOG.md`** — replace all entries with a fresh template (keep the header, version suffix note, and an empty `[Unreleased]` section with `*(No changes yet)*`). This gives the repo a clean history starting point
 - Commit message: `Phantom edit to align all file timestamps on GitHub` (no version prefix)
 
+---
+> **--- END OF PHANTOM EDIT ---**
+---
+
 ## Execution Style
 - For clear, straightforward requests: **just do it** — make the changes, commit, and push without asking for plan approval
 - Only ask clarifying questions when the request is genuinely ambiguous or has multiple valid interpretations
 - Do not use formal plan-mode approval workflows for routine tasks (version bumps, file moves, feature additions, bug fixes, etc.)
+
+---
+> **--- END OF EXECUTION STYLE ---**
+---
 
 ## AudioContext & Browser Autoplay Policy
 - **AudioContext starts as `'suspended'`** on every page load — browsers require a user gesture (click/touch) before allowing audio playback
@@ -204,6 +252,10 @@ For pages that live directly in `live-site-pages/` (not in a subdirectory), the 
 - **Use `sessionStorage` (not `localStorage`) for audio state flags** — `sessionStorage` is per-tab, so a flag set in one tab doesn't leak into new tabs that have no gesture context. `localStorage` would cause false-positive "sound ready" icons in fresh tabs
 - **The `audio-unlocked` sessionStorage flag** remembers that audio was successfully unlocked in this tab. On F5 refresh, the AudioContext is suspended but the flag tells the icon to show "ready" instead of "muted" — because a click will instantly restore it. Without this flag, the icon flashes "muted" on every refresh even though audio works fine
 - **Chrome "Duplicate Tab" copies `sessionStorage`** — including the `audio-unlocked` flag — into the new tab, but the new tab has no gesture context, so the AudioContext is suspended. The stale flag causes the icon to falsely show "sound ready." Fix: use `performance.getEntriesByType('navigation')` to detect the navigation type; if it's anything other than `'reload'` (e.g. `'navigate'` for duplicate tab, back/forward, or new navigation), clear the `audio-unlocked` flag before creating the AudioContext. This must run **before** `new AudioContext()` so that `updateAudioStatus()` sees the correct flag state from the start
+
+---
+> **--- END OF AUDIOCONTEXT & BROWSER AUTOPLAY POLICY ---**
+---
 
 ## Google Sign-In (GIS) for GAS Embedded Apps
 When a GAS app embedded in a GitHub Pages iframe needs Google sign-in (e.g. to restrict access to authorized users), the sign-in **must run from the parent embedding page**, not from inside the GAS iframe.
@@ -231,6 +283,10 @@ When a GAS app embedded in a GitHub Pages iframe needs Google sign-in (e.g. to r
 | `gas-needs-auth` | GAS iframe → parent | Tells parent to show sign-in wall (includes `authStatus`, `email`) |
 | `gas-auth-complete` | GAS iframe → parent | Tells parent auth succeeded (hides wall, reloads iframe) |
 
+---
+> **--- END OF GOOGLE SIGN-IN (GIS) ---**
+---
+
 ## Keeping Documentation Files in Sync
 *Mandatory rules: see Pre-Commit Checklist items #5, #6, #7, #8. Reference table below for additional files to consider.*
 
@@ -245,6 +301,10 @@ When a GAS app embedded in a GitHub Pages iframe needs Google sign-in (e.g. to r
 | `.github/PULL_REQUEST_TEMPLATE.md` | New checklist items become relevant (e.g. new conventions, new mandatory checks) |
 
 Update these only when the change is genuinely relevant — don't force unnecessary edits.
+
+---
+> **--- END OF KEEPING DOCUMENTATION FILES IN SYNC ---**
+---
 
 ## Developer Branding
 *Rule: see Pre-Commit Checklist item #10. Syntax reference below.*
