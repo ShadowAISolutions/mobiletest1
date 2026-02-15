@@ -131,7 +131,7 @@ jobs:
 
       - name: Delete branch
         run: |
-          git push origin --delete ${{ github.ref_name }}
+          git push origin --delete ${{ github.ref_name }} || echo "Branch already deleted"
 
   deploy:
     if: >-
