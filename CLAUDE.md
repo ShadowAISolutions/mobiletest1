@@ -40,7 +40,7 @@ These checks catch template drift that accumulates when the repo is cloned/forke
 ## Template Repo Guard
 > When `YOUR_REPO_NAME` is `autoupdatehtmltemplate` (i.e. this is the template repo itself, not a fork/clone):
 > - **Session Start Checklist template drift checks are skipped** — step #1 short-circuits the numbered checklist. The "Always Run" section (branch hygiene and deployment flow) still applies every session
-> - **All version bumps are skipped** — Pre-Commit Checklist items #1 (`.gs` version bump), #2 (HTML build-version), #3 (version.txt sync), #5 (STATUS.md), #7 (CHANGELOG.md), and #9 (version prefix in commit message) are all skipped unless the user explicitly requests them
+> - **All version bumps are skipped** — Pre-Commit Checklist items #1 (`.gs` version bump), #2 (HTML build-version), #3 (version.txt sync), #5 (STATUS.md), **#7 (CHANGELOG.md)**, and #9 (version prefix in commit message) are all skipped unless the user explicitly requests them. **DO NOT add CHANGELOG entries on the template repo** — the CHANGELOG must stay clean with `*(No changes yet)*` so that forks start with a blank history
 > - **GitHub Pages deployment is skipped** — the workflow's `deploy` job checks `github.event.repository.name != 'autoupdatehtmltemplate'` and won't run on the template repo
 > - Pre-Commit items #4, #6, #8, #10, #11, #12 still apply normally
 
@@ -382,6 +382,7 @@ Files live in three locations: repo root, `.github/`, and `repository-informatio
 - This section must remain the **last section** in CLAUDE.md — do not add new sections below it (except Template Variables, which is at the top)
 
 Developed by: ShadowAISolutions
+
 
 
 
