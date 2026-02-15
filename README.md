@@ -33,7 +33,13 @@ demorepo4/
 ├── docs/
 │   ├── ARCHITECTURE.md         # System diagram (Mermaid)
 │   ├── CHANGELOG.md            # Version history
-│   └── STATUS.md               # Project status dashboard
+│   ├── CODE_OF_CONDUCT.md      # Community standards
+│   ├── CONTRIBUTING.md         # How to contribute
+│   ├── GOVERNANCE.md           # Project governance
+│   ├── SECURITY.md             # Vulnerability reporting
+│   ├── STATUS.md               # Project status dashboard
+│   └── SUPPORT.md              # Getting help
+├── CITATION.cff                # Citation metadata
 ├── CLAUDE.md                   # Developer instructions
 └── LICENSE                     # Proprietary license
 ```
@@ -43,8 +49,18 @@ demorepo4/
 | Document | Description |
 |----------|-------------|
 | [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Visual system diagram (Mermaid) |
-| [CLAUDE.md](CLAUDE.md) | Developer instructions and conventions |
 | [CHANGELOG.md](docs/CHANGELOG.md) | Version history |
+| [CLAUDE.md](CLAUDE.md) | Developer instructions and conventions |
 | [STATUS.md](docs/STATUS.md) | Current project status and versions |
+
+## Community
+
+| Document | Description |
+|----------|-------------|
+| [Code of Conduct](docs/CODE_OF_CONDUCT.md) | Community standards and expectations |
+| [Contributing](docs/CONTRIBUTING.md) | How to contribute to this project |
+| [Security Policy](docs/SECURITY.md) | How to report vulnerabilities |
+| [Support](docs/SUPPORT.md) | Getting help |
+| [Governance](docs/GOVERNANCE.md) | Project ownership and decision making |
 
 Developed by: ShadowAISolutions
