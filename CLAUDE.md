@@ -66,6 +66,13 @@ These checks catch template drift that accumulates when the repo is cloned/forke
 - The Session Start and Pre-Commit checklists are the **single source of truth** for all actionable rules. Detailed sections below provide reference context only
 - When adding new rules to CLAUDE.md, add the actionable check to the appropriate checklist and put supporting details in a reference section — do not duplicate the rule in both places
 - When editing CLAUDE.md, check whether any existing reference section restates a checklist item — if so, remove the duplicate and add a `*Rule: see ... Checklist item #N*` pointer instead
+- **Section separators** — every `##` section in CLAUDE.md must end with a double-ruled banner. When adding a new `##` section, add the following block between the end of its content and the next `##` heading:
+  ```
+  ---
+  > **--- END OF SECTION NAME ---**
+  ---
+  ```
+  Replace `SECTION NAME` with the section's heading in ALL CAPS. The only exception is Developer Branding (the final section), which has no separator after it
 
 ---
 > **--- END OF PRE-COMMIT CHECKLIST ---**
