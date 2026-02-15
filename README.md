@@ -1,10 +1,10 @@
-# ​‌‌‌‌‌‌‌​​‌‌‌‌‌​autoupdatehtmltemplate
+# ​‌‌‌‌‌‌‌​​‌‌‌‌‌​YourRepoName
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-Last updated: `2026-02-15 03:52:35 PM EST`
+Last updated: `2026-02-15 04:05:18 PM EST`
 
-You are currently using the **autoupdatehtmltemplate**, update your code and claude will update the live site link here
+You are currently using the **YourRepoName**, update your code and claude will update the live site link here
 
 ## Initialize This Template
 
@@ -12,14 +12,14 @@ After copying this template to your own repository, follow these steps to get yo
 
 ### 1. Enable GitHub Pages
 
-Go to your repository's [**Pages settings**](https://github.com/ShadowAISolutions/autoupdatehtmltemplate/settings/pages) and configure:
+Go to your repository's [**Pages settings**](https://github.com/YourOrgName/YourRepoName/settings/pages) and configure:
 
 - **Source**: Select **GitHub Actions** (not "Deploy from a branch")
 - This allows the included workflow to deploy your `live-site-pages/` directory automatically
 
 ### 2. Create the `github-pages` Environment
 
-Go to your repository's [**Environments settings**](https://github.com/ShadowAISolutions/autoupdatehtmltemplate/settings/environments) and:
+Go to your repository's [**Environments settings**](https://github.com/YourOrgName/YourRepoName/settings/environments) and:
 
 - Click **New environment**
 - Name it exactly `github-pages`
@@ -55,7 +55,7 @@ Google Apps Script projects are embedded as iframes in GitHub Pages. The framewo
 ## Project Structure
 
 ```
-autoupdatehtmltemplate/
+YourRepoName/
 ├── live-site-pages/             # Deployed to GitHub Pages
 │   ├── index.html              # Live landing page
 │   ├── index.version.txt       # Version file for auto-refresh

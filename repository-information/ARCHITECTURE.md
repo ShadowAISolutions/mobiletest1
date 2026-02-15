@@ -2,7 +2,7 @@
 
 ```mermaid
 graph TB
-    subgraph "Repository: autoupdatehtmltemplate"
+    subgraph "Repository: YourRepoName"
         direction TB
 
         subgraph "Developer Workflow"
@@ -27,7 +27,7 @@ graph TB
 
         subgraph "GitHub Pages Deployment"
             DEPLOY_PAGES["Deploy live-site-pages/ to\nGitHub Pages"]
-            LIVE["Live Site\nShadowAISolutions.github.io/autoupdatehtmltemplate"]
+            LIVE["Live Site\nYourOrgName.github.io/YourRepoName"]
             DEPLOY_PAGES --> LIVE
         end
 

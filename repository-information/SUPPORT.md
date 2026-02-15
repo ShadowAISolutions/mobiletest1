@@ -6,8 +6,8 @@ If you need help with this project, here are your options:
 
 ### Issues
 
-- **Bug reports:** [Open an issue](https://github.com/ShadowAISolutions/autoupdatehtmltemplate/issues/new) with steps to reproduce
-- **Feature requests:** [Open an issue](https://github.com/ShadowAISolutions/autoupdatehtmltemplate/issues/new) describing the desired behavior
+- **Bug reports:** [Open an issue](https://github.com/YourOrgName/YourRepoName/issues/new) with steps to reproduce
+- **Feature requests:** [Open an issue](https://github.com/YourOrgName/YourRepoName/issues/new) describing the desired behavior
 
 ### Documentation
 
