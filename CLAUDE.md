@@ -29,9 +29,10 @@ These checks catch template drift that accumulates when the repo is cloned/forke
 
 1. **Repo name auto-detect** — compare the actual repo name to the `YOUR_REPO_NAME` value in the Template Variables table. If they differ, update the table value and propagate it to every file in the "Where it appears" column
 2. **README live site link** — check if `README.md` still contains the placeholder text (`You are currently using the **YOUR_REPO_NAME**...`). If so, replace it with: `**Live site:** [YOUR_ORG_NAME.github.io/YOUR_REPO_NAME](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME)` (resolved values)
-3. **Unresolved placeholders** — scan for any literal `YOUR_ORG_NAME`, `YOUR_REPO_NAME`, or `YOUR_PROJECT_TITLE` strings in code files (not CLAUDE.md) and replace them with resolved values
-4. **Variable propagation** — if any value in the Template Variables table was changed (in this or a prior session), verify the new value has been propagated to every file listed in the "Where it appears" column
-5. **Confirm completion** — after all checks pass, briefly state to the user: "Session start checklist complete — no issues found" (or list what was fixed). Then proceed to their request
+3. **Remove "Initialize This Template" section** — if `README.md` contains the `## Initialize This Template` section, delete it entirely (from the `## Initialize This Template` heading through to the line immediately before the next `##` heading). This section is only useful on the template repo itself; forks/clones should not keep it
+4. **Unresolved placeholders** — scan for any literal `YOUR_ORG_NAME`, `YOUR_REPO_NAME`, or `YOUR_PROJECT_TITLE` strings in code files (not CLAUDE.md) and replace them with resolved values
+5. **Variable propagation** — if any value in the Template Variables table was changed (in this or a prior session), verify the new value has been propagated to every file listed in the "Where it appears" column
+6. **Confirm completion** — after all checks pass, briefly state to the user: "Session start checklist complete — no issues found" (or list what was fixed). Then proceed to their request
 
 ---
 > **--- END OF SESSION START CHECKLIST ---**
