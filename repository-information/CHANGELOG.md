@@ -7,7 +7,8 @@ Version suffixes: `w` = website (HTML pages), `g` = Google Apps Script.
 
 ## [Unreleased]
 
-*(No changes yet)*
+### Changed
+- Bumped `index.html` build-version from `01.00w` to `01.01w`
 
 Developed by: ShadowAISolutions
 
