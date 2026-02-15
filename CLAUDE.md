@@ -34,7 +34,6 @@ These checks catch template drift that accumulates when the repo is cloned/forke
 3. **Relative links (already dynamic — do NOT modify)** — certain markdown files use relative paths that automatically resolve to the correct repo via GitHub's blob-view URL structure (see *Relative Path Resolution on GitHub* reference section for how this works). These links work on any fork/clone without initialization and must **never** be converted to absolute URLs or modified during drift checks. Files with relative links:
    - `.github/SECURITY.md` — private security advisory link (`../../../security/advisories/new`)
    - `repository-information/SUPPORT.md` — issue creation links (`../../../issues/new`)
-   - `repository-information/STATUS.md` — GitHub Pages deployment link (`../../../deployments/github-pages`). This links to the deployment page (not the live site directly) because `github.io` is a different domain that can't be reached via relative path — the deployment page is the closest dynamic equivalent
 4. **Absolute URL propagation** — some files contain absolute URLs with the org and repo name that cannot use relative paths (YAML metadata fields, GitHub Pages URLs on a different domain, Mermaid diagram text). After steps 1–2, find and replace the template repo's values (`ShadowAISolutions`/`autoupdatehtmltemplate`) with the fork's actual values in these files. **For each file, verify every URL listed below — not just the first one you find:**
    - `.github/ISSUE_TEMPLATE/config.yml` — YAML `url` fields require absolute URLs:
      - `url: https://github.com/ShadowAISolutions/autoupdatehtmltemplate/blob/main/repository-information/SUPPORT.md` (support link)
@@ -42,6 +41,8 @@ These checks catch template drift that accumulates when the repo is cloned/forke
    - `CITATION.cff` — citation metadata (not rendered markdown):
      - `repository-code:` URL (`https://github.com/ShadowAISolutions/autoupdatehtmltemplate`)
      - `url:` field (`https://ShadowAISolutions.github.io/autoupdatehtmltemplate`)
+   - `repository-information/STATUS.md` — placeholder in Hosted Pages table (`github.io` is a different domain, can't use relative paths):
+     - If the Live URL column still contains `*(deploy to activate)*`, replace it with `[View](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME/)` (resolved values)
    - `repository-information/ARCHITECTURE.md` — Mermaid diagram text (not a clickable link):
      - `LIVE["Live Site\nShadowAISolutions.github.io/autoupdatehtmltemplate"]`
    - `README.md` — live site link and source repo URL:
@@ -121,9 +122,9 @@ These variables are the **single source of truth** for repo-specific values. Whe
 
 | Variable | Value | Where it appears |
 |----------|-------|------------------|
-| `YOUR_ORG_NAME` | `YourOrgName` | README (live site link), CITATION.cff (repository URL, site URL), ARCHITECTURE (diagram URL), issue template config (URLs) |
+| `YOUR_ORG_NAME` | `YourOrgName` | README (live site link), CITATION.cff (repository URL, site URL), STATUS (live URL), ARCHITECTURE (diagram URL), issue template config (URLs) |
 | `YOUR_ORG_LOGO_URL` | `https://logoipsum.com/logoipsum-avatar.png` | `index.html` and template HTML (`YOUR_ORG_LOGO_URL` JS variable), available for use in pages that need the org logo |
-| `YOUR_REPO_NAME` | `YourRepoName` | README (structure tree, live site link), CITATION.cff (repository URL, site URL), ARCHITECTURE (diagram URL), issue template config (URLs) |
+| `YOUR_REPO_NAME` | `YourRepoName` | README (structure tree, live site link), CITATION.cff (repository URL, site URL), STATUS (live URL), ARCHITECTURE (diagram URL), issue template config (URLs) |
 | `YOUR_PROJECT_TITLE` | `Auto Update HTML Template` | README (title), `<title>` tag in `live-site-pages/index.html` and `live-site-templates/AutoUpdateOnlyHtmlTemplate.html` |
 | `DEVELOPER_NAME` | `ShadowAISolutions` | LICENSE (copyright), README ("Developed by:" footer), CITATION.cff (author name), "Developed by:" footers (all files including `index.html`, template HTML, workflow, issue templates, YAML, Markdown), FUNDING.yml (sponsor handle), GOVERNANCE (ownership), CONTRIBUTING (convention text), PR template (checklist + footer) |
 | `DEVELOPER_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | HTML splash screen `LOGO_URL` variable (in `index.html` and template) |
@@ -440,29 +441,17 @@ This resolves correctly on **any** fork because the org and repo name are part o
 | Markdown files (`.md`) rendered on GitHub | Yes | GitHub renders links as `<a href="...">`, browser resolves relative paths from blob-view URL |
 | YAML config files (`config.yml`, `CITATION.cff`) | No | GitHub processes these as structured data, not rendered markdown — relative URLs may not be resolved |
 | Mermaid diagram text labels | No | Text content inside code blocks, not rendered as clickable links |
-| GitHub Pages URLs (`org.github.io/repo`) | No | Different domain entirely — can't be reached via relative path from `github.com`. **Workaround:** link to `deployments/github-pages` instead (see below) |
-
-### GitHub Pages links — the `deployments/` workaround
-
-You can't reach `org.github.io` via relative path from `github.com`, but you CAN link to the GitHub **deployments page** — which is on `github.com` and resolves dynamically on any fork:
-
-```
-Route:     deployments/github-pages
-Example:   ../../../deployments/github-pages   (from repository-information/)
-Resolves:  https://github.com/AnyOrg/AnyRepo/deployments/github-pages  ✓
-```
-
-This links to the deployment history page (not the live site directly), but it's always correct on any fork without find-and-replace. **Prefer this pattern over hardcoded `github.io` URLs in markdown files whenever possible.** Files that can't use this (YAML fields, Mermaid text, citation metadata) still need absolute URL propagation in drift check step #4.
+| GitHub Pages URLs (`org.github.io/repo`) | No | Different domain entirely — can't be reached via relative path from `github.com`. Use a placeholder (e.g. `*(deploy to activate)*`) and replace via drift check step #4 |
 
 ### Adding new relative links
 
-When creating a new markdown file with links to GitHub web app routes (issues, security advisories, settings, deployments, etc.):
+When creating a new markdown file with links to GitHub web app routes (issues, security advisories, settings, etc.):
 
 1. Determine the file's directory depth relative to the repo root
 2. Add 2 for `blob/main/` (or `blob/{branch}/`) to get the total `../` count needed to reach `/org/repo/`
-3. Append the GitHub route (e.g. `security/advisories/new`, `issues/new`, `deployments/github-pages`)
+3. Append the GitHub route (e.g. `security/advisories/new`, `issues/new`)
 4. **Never** hardcode the org or repo name in markdown links that can use this pattern
-5. **For GitHub Pages links** — use `deployments/github-pages` instead of a hardcoded `org.github.io` URL. Only fall back to an absolute `github.io` URL when the context doesn't support relative links (YAML, Mermaid, etc.)
+5. **For GitHub Pages links** — `github.io` URLs can't be made dynamic via relative paths. Use placeholder text (e.g. `*(deploy to activate)*`) and document the replacement in drift check step #4
 
 ---
 > **--- END OF RELATIVE PATH RESOLUTION ON GITHUB ---**

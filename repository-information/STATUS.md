@@ -4,7 +4,7 @@
 
 | Page | File | Version | Live URL | Status |
 |------|------|---------|----------|--------|
-| Landing Page | `live-site-pages/index.html` | v01.00w | [View](../../../deployments/github-pages) | Active |
+| Landing Page | `live-site-pages/index.html` | v01.00w | *(deploy to activate)* | Active |
 
 ## GAS Projects
 
