@@ -34,7 +34,7 @@ demorepo4/
 │   ├── ISSUE_TEMPLATE/         # Bug report & feature request forms
 │   ├── PULL_REQUEST_TEMPLATE.md # PR checklist
 │   └── FUNDING.yml             # Sponsor button config
-├── docs/
+├── repo-info/
 │   ├── ARCHITECTURE.md         # System diagram (Mermaid)
 │   ├── CHANGELOG.md            # Version history
 │   ├── CODE_OF_CONDUCT.md      # Community standards
@@ -52,20 +52,20 @@ demorepo4/
 
 | Document | Description |
 |----------|-------------|
-| [ARCHITECTURE.md](docs/ARCHITECTURE.md) | Visual system diagram (Mermaid) |
-| [CHANGELOG.md](docs/CHANGELOG.md) | Version history |
+| [ARCHITECTURE.md](repo-info/ARCHITECTURE.md) | Visual system diagram (Mermaid) |
+| [CHANGELOG.md](repo-info/CHANGELOG.md) | Version history |
 | [CLAUDE.md](CLAUDE.md) | Developer instructions and conventions |
-| [STATUS.md](docs/STATUS.md) | Current project status and versions |
+| [STATUS.md](repo-info/STATUS.md) | Current project status and versions |
 
 ## Community
 
 | Document | Description |
 |----------|-------------|
-| [Code of Conduct](docs/CODE_OF_CONDUCT.md) | Community standards and expectations |
-| [Contributing](docs/CONTRIBUTING.md) | How to contribute to this project |
-| [Security Policy](docs/SECURITY.md) | How to report vulnerabilities |
-| [Support](docs/SUPPORT.md) | Getting help |
-| [Governance](docs/GOVERNANCE.md) | Project ownership and decision making |
+| [Code of Conduct](repo-info/CODE_OF_CONDUCT.md) | Community standards and expectations |
+| [Contributing](repo-info/CONTRIBUTING.md) | How to contribute to this project |
+| [Security Policy](repo-info/SECURITY.md) | How to report vulnerabilities |
+| [Support](repo-info/SUPPORT.md) | Getting help |
+| [Governance](repo-info/GOVERNANCE.md) | Project ownership and decision making |
 
 Developed by: ShadowAISolutions
 
