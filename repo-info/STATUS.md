@@ -4,7 +4,7 @@
 
 | Page | File | Version | Live URL | Status |
 |------|------|---------|----------|--------|
-| Landing Page | `live-site-pages/index.html` | v01.00w | [View](https://ShadowAISolutions.github.io/demorepo4/) | Active |
+| Landing Page | `live-site-pages/index.html` | v01.00w | [View](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME/) | Active |
 
 ## GAS Projects
 
@@ -18,5 +18,5 @@
 |----------|------|------------------|
 | Auto-Update HTML | `live-site-templates/AutoUpdateOnlyHtmlTemplate.html` | v01.00w |
 
-Developed by: ShadowAISolutions
+Developed by: YOUR_ORG_NAME
 

@@ -36,7 +36,7 @@ For external contributions, open a standard pull request against `main`.
 - 2-space indentation (enforced by `.editorconfig`)
 - UTF-8 encoding, LF line endings
 - No `alert()`, `confirm()`, or `prompt()` — use custom styled modals
-- Every code file must end with: `Developed by: ShadowAISolutions`
+- Every code file must end with: `Developed by: YOUR_ORG_NAME`
 
 ### Template Rules
 
@@ -44,5 +44,5 @@ For external contributions, open a standard pull request against `main`.
 
 See [CLAUDE.md](../CLAUDE.md) for the full list of project conventions.
 
-Developed by: ShadowAISolutions
+Developed by: YOUR_ORG_NAME
 

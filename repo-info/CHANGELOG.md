@@ -12,6 +12,7 @@ Version suffixes: `w` = website (HTML pages), `g` = Google Apps Script.
 - Renamed `docs/` folder to `repo-info/` for clarity; updated all references
 - Renamed `httpsdocs/` to `live-site-pages/` and `autoUpdateTemplateFiles/` to `live-site-templates/`; updated all references
 - Moved CODE_OF_CONDUCT.md, CONTRIBUTING.md, and SECURITY.md to `.github/` for GitHub tab auto-detection
+- Genericized all repo-specific references (`demorepo4` → `YOUR_REPO_NAME`, `ShadowAISolutions` → `YOUR_ORG_NAME`, logo URL → `YOUR_LOGO_URL`) for template reuse
 
 ## [v01.04w] - 2026-02-14
 ### Changed
@@ -52,9 +53,9 @@ Version suffixes: `w` = website (HTML pages), `g` = Google Apps Script.
 ### Infrastructure
 - Added CI/CD workflow (`auto-merge-claude.yml`) for auto-merge and deployment
 - Created auto-update HTML template with splash screen, audio, and version polling
-- Added developer branding ("Developed by: ShadowAISolutions") to all code files
+- Added developer branding ("Developed by: YOUR_ORG_NAME") to all code files
 - Added `CLAUDE.md` with comprehensive project conventions
 - Added `ARCHITECTURE.md` with Mermaid system diagram
 
-Developed by: ShadowAISolutions
+Developed by: YOUR_ORG_NAME
 

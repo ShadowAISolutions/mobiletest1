@@ -1,8 +1,8 @@
-# demorepo4
+# YOUR_REPO_NAME
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-**Live site:** [ShadowAISolutions.github.io/demorepo4](https://ShadowAISolutions.github.io/demorepo4)
+**Live site:** [YOUR_ORG_NAME.github.io/YOUR_REPO_NAME](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME)
 
 ## How It Works
 
@@ -23,7 +23,7 @@ Google Apps Script projects are embedded as iframes in GitHub Pages. The framewo
 ## Project Structure
 
 ```
-demorepo4/
+YOUR_REPO_NAME/
 ├── live-site-pages/             # Deployed to GitHub Pages
 │   ├── index.html              # Live landing page
 │   ├── index.version.txt       # Version file for auto-refresh
@@ -67,5 +67,5 @@ demorepo4/
 | [Support](repo-info/SUPPORT.md) | Getting help |
 | [Governance](repo-info/GOVERNANCE.md) | Project ownership and decision making |
 
-Developed by: ShadowAISolutions
+Developed by: YOUR_ORG_NAME
 

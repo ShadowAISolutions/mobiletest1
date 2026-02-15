@@ -6,7 +6,7 @@ If you discover a security vulnerability in this project, please report it respo
 
 **Do not open a public issue.** Instead, contact the maintainers directly:
 
-1. Open a [private security advisory](https://github.com/ShadowAISolutions/demorepo4/security/advisories/new) on this repository
+1. Open a [private security advisory](https://github.com/YOUR_ORG_NAME/YOUR_REPO_NAME/security/advisories/new) on this repository
 2. Or email the project maintainers with details of the vulnerability
 
 ## What to Include
@@ -41,5 +41,5 @@ This security policy covers:
 - Google Apps Script code (`.gs` files)
 - CI/CD workflows (`.github/workflows/`)
 
-Developed by: ShadowAISolutions
+Developed by: YOUR_ORG_NAME
 

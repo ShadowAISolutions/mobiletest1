@@ -6,8 +6,8 @@ If you need help with this project, here are your options:
 
 ### Issues
 
-- **Bug reports:** [Open an issue](https://github.com/ShadowAISolutions/demorepo4/issues/new) with steps to reproduce
-- **Feature requests:** [Open an issue](https://github.com/ShadowAISolutions/demorepo4/issues/new) describing the desired behavior
+- **Bug reports:** [Open an issue](https://github.com/YOUR_ORG_NAME/YOUR_REPO_NAME/issues/new) with steps to reproduce
+- **Feature requests:** [Open an issue](https://github.com/YOUR_ORG_NAME/YOUR_REPO_NAME/issues/new) describing the desired behavior
 
 ### Documentation
 
@@ -21,5 +21,5 @@ If you need help with this project, here are your options:
 
 For security vulnerabilities, **do not open a public issue**. See our [Security Policy](SECURITY.md) for responsible disclosure instructions.
 
-Developed by: ShadowAISolutions
+Developed by: YOUR_ORG_NAME
 

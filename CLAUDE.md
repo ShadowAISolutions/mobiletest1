@@ -65,7 +65,7 @@ When creating a **new** HTML embedding page, follow every step below:
 6. **Set the initial build-version** — in the HTML `<head>`, set `<meta name="build-version" content="01.00w">` and match it in `<page-name>.version.txt`
 7. **Update the page title** — replace `YOUR_PROJECT_TITLE` in `<title>` with the actual project name
 8. **Register in GAS Projects table** — if this page embeds a GAS iframe, add a row to the GAS Projects table in the Version Bumping section above
-9. **Add developer branding** — ensure `<!-- Developed by: ShadowAISolutions -->` is the last line of the HTML file
+9. **Add developer branding** — ensure `<!-- Developed by: YOUR_ORG_NAME -->` is the last line of the HTML file
 
 ### Directory Structure (per embedding page)
 ```
@@ -192,17 +192,17 @@ After every change, review whether any of the following documentation files need
 - Other files: update only when the change is genuinely relevant — don't force unnecessary edits
 
 ## Developer Branding
-- **Every code file** in this repo must have a comment at the very bottom: `Developed by: ShadowAISolutions`
+- **Every code file** in this repo must have a comment at the very bottom: `Developed by: YOUR_ORG_NAME`
 - Use the appropriate comment syntax for each file type:
-  - HTML: `<!-- Developed by: ShadowAISolutions -->`
-  - JavaScript / GAS (.gs): `// Developed by: ShadowAISolutions`
-  - YAML: `# Developed by: ShadowAISolutions`
-  - CSS: `/* Developed by: ShadowAISolutions */`
+  - HTML: `<!-- Developed by: YOUR_ORG_NAME -->`
+  - JavaScript / GAS (.gs): `// Developed by: YOUR_ORG_NAME`
+  - YAML: `# Developed by: YOUR_ORG_NAME`
+  - CSS: `/* Developed by: YOUR_ORG_NAME */`
   - Markdown: plain text at the very bottom
 - When creating new code files, always add this comment as the last line
 - This section must remain the **last section** in CLAUDE.md — do not add new sections below it
 
-Developed by: ShadowAISolutions
+Developed by: YOUR_ORG_NAME
 
 
 

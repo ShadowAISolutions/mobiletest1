@@ -2,7 +2,7 @@
 
 ```mermaid
 graph TB
-    subgraph "Repository: demorepo4"
+    subgraph "Repository: YOUR_REPO_NAME"
         direction TB
 
         subgraph "Developer Workflow"
@@ -27,7 +27,7 @@ graph TB
 
         subgraph "GitHub Pages Deployment"
             DEPLOY_PAGES["Deploy live-site-pages/ to\nGitHub Pages"]
-            LIVE["Live Site\nShadowAISolutions.github.io/demorepo4"]
+            LIVE["Live Site\nYOUR_ORG_NAME.github.io/YOUR_REPO_NAME"]
             DEPLOY_PAGES --> LIVE
         end
 
@@ -74,5 +74,5 @@ graph TB
     style CLAUDE_MD fill:#ce93d8,color:#000
 ```
 
-Developed by: ShadowAISolutions
+Developed by: YOUR_ORG_NAME
 

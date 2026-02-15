@@ -1,12 +1,12 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "demorepo4"
+title: "YOUR_REPO_NAME"
 abstract: "A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script embedding support."
 authors:
-  - name: "ShadowAISolutions"
+  - name: "YOUR_ORG_NAME"
 type: software
 license: "All Rights Reserved"
-repository-code: "https://github.com/ShadowAISolutions/demorepo4"
-url: "https://ShadowAISolutions.github.io/demorepo4"
-# Developed by: ShadowAISolutions
+repository-code: "https://github.com/YOUR_ORG_NAME/YOUR_REPO_NAME"
+url: "https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME"
+# Developed by: YOUR_ORG_NAME
 

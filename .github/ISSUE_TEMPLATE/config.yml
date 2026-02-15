@@ -1,11 +1,11 @@
 blank_issues_enabled: false
 contact_links:
   - name: Support
-    url: https://github.com/ShadowAISolutions/demorepo4/blob/main/repo-info/SUPPORT.md
+    url: https://github.com/YOUR_ORG_NAME/YOUR_REPO_NAME/blob/main/repo-info/SUPPORT.md
     about: Check our support resources before opening an issue
   - name: Security Vulnerability
-    url: https://github.com/ShadowAISolutions/demorepo4/security/advisories/new
+    url: https://github.com/YOUR_ORG_NAME/YOUR_REPO_NAME/security/advisories/new
     about: Report security vulnerabilities privately (do not open a public issue)
 
-# Developed by: ShadowAISolutions
+# Developed by: YOUR_ORG_NAME
 
