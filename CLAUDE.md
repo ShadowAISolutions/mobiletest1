@@ -52,7 +52,7 @@ These variables are the **single source of truth** for repo-specific values. Whe
 | `YOUR_REPO_NAME` | `autoupdatehtmltemplate` | README (title, structure tree, live site link), CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
 | `YOUR_PROJECT_TITLE` | `autoupdatehtmltemplate` | `<title>` tag in `live-site-pages/index.html` and `live-site-templates/AutoUpdateOnlyHtmlTemplate.html` |
 | `DEVELOPER_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | HTML splash screen `LOGO_URL` variable (in `index.html` and template) |
-| `COMPANY_LOGO_URL` | `https://pfcassociates.github.io/PFC_Website/PFC_images/PFC_LOGO_4_Transparent.png` | Available for use in pages that need the company logo |
+| `COMPANY_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | Available for use in pages that need the company logo |
 
 ### How variables work
 - **In code files** (HTML, YAML, Markdown, etc.): use the **resolved value** (e.g. write `ShadowAISolutions`, not `YOUR_ORG_NAME`)
