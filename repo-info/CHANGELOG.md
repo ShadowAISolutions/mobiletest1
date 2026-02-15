@@ -11,6 +11,7 @@ Version suffixes: `w` = website (HTML pages), `g` = Google Apps Script.
 - Reset all build-versions to 01.00w (index.html, template, version.txt files) for clean template baseline
 - Renamed `docs/` folder to `repo-info/` for clarity; updated all references
 - Renamed `httpsdocs/` to `live-site-pages/` and `autoUpdateTemplateFiles/` to `live-site-templates/`; updated all references
+- Moved CODE_OF_CONDUCT.md, CONTRIBUTING.md, and SECURITY.md to `.github/` for GitHub tab auto-detection
 
 ## [v01.04w] - 2026-02-14
 ### Changed

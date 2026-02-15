@@ -179,8 +179,8 @@ After every change, review whether any of the following documentation files need
 | `repo-info/STATUS.md` | A new page or GAS project is added/removed, a version number changes, deployment status changes |
 | `.gitignore` | New file types or tooling is introduced that generates artifacts (e.g. adding Node tooling, Python venvs, build outputs) |
 | `.editorconfig` | New file types are introduced that need specific formatting rules |
-| `repo-info/CONTRIBUTING.md` | Development workflow changes, new conventions are added to CLAUDE.md that contributors need to know |
-| `repo-info/SECURITY.md` | New attack surfaces are added (e.g. new API endpoints, new OAuth flows, new deployment targets) |
+| `.github/CONTRIBUTING.md` | Development workflow changes, new conventions are added to CLAUDE.md that contributors need to know |
+| `.github/SECURITY.md` | New attack surfaces are added (e.g. new API endpoints, new OAuth flows, new deployment targets) |
 | `CITATION.cff` | Project name, description, authors, or URLs change |
 | `.github/ISSUE_TEMPLATE/*.yml` | New project areas are added (update the "Affected Area" / "Area" dropdown options) |
 | `.github/PULL_REQUEST_TEMPLATE.md` | New checklist items become relevant (e.g. new conventions, new mandatory checks) |

@@ -33,14 +33,14 @@ demorepo4/
 │   ├── workflows/              # CI/CD pipeline
 │   ├── ISSUE_TEMPLATE/         # Bug report & feature request forms
 │   ├── PULL_REQUEST_TEMPLATE.md # PR checklist
+│   ├── CODE_OF_CONDUCT.md      # Community standards
+│   ├── CONTRIBUTING.md         # How to contribute
+│   ├── SECURITY.md             # Vulnerability reporting
 │   └── FUNDING.yml             # Sponsor button config
 ├── repo-info/
 │   ├── ARCHITECTURE.md         # System diagram (Mermaid)
 │   ├── CHANGELOG.md            # Version history
-│   ├── CODE_OF_CONDUCT.md      # Community standards
-│   ├── CONTRIBUTING.md         # How to contribute
 │   ├── GOVERNANCE.md           # Project governance
-│   ├── SECURITY.md             # Vulnerability reporting
 │   ├── STATUS.md               # Project status dashboard
 │   └── SUPPORT.md              # Getting help
 ├── CITATION.cff                # Citation metadata
@@ -61,9 +61,9 @@ demorepo4/
 
 | Document | Description |
 |----------|-------------|
-| [Code of Conduct](repo-info/CODE_OF_CONDUCT.md) | Community standards and expectations |
-| [Contributing](repo-info/CONTRIBUTING.md) | How to contribute to this project |
-| [Security Policy](repo-info/SECURITY.md) | How to report vulnerabilities |
+| [Code of Conduct](.github/CODE_OF_CONDUCT.md) | Community standards and expectations |
+| [Contributing](.github/CONTRIBUTING.md) | How to contribute to this project |
+| [Security Policy](.github/SECURITY.md) | How to report vulnerabilities |
 | [Support](repo-info/SUPPORT.md) | Getting help |
 | [Governance](repo-info/GOVERNANCE.md) | Project ownership and decision making |
 
