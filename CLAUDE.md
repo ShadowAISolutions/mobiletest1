@@ -30,7 +30,7 @@ These checks catch template drift that accumulates when the repo is cloned/forke
 1. **Repo name auto-detect** — compare the actual repo name to the `YOUR_REPO_NAME` value in the Template Variables table. If they differ, update the table value and propagate it to every file in the "Where it appears" column
 2. **README live site link** — check if `README.md` still contains the placeholder text (`You are currently using the **YOUR_REPO_NAME**...`). If so, replace it with: `**Live site:** [YOUR_ORG_NAME.github.io/YOUR_REPO_NAME](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME)` (resolved values)
 3. **Remove "Initialize This Template" section** — if `README.md` contains the `## Initialize This Template` section, delete it entirely (from the `## Initialize This Template` heading through to the line immediately before the next `##` heading). This section is only useful on the template repo itself; forks/clones should not keep it
-4. **Unresolved placeholders** — scan for any literal `YOUR_ORG_NAME`, `YOUR_REPO_NAME`, or `YOUR_PROJECT_TITLE` strings in code files (not CLAUDE.md) and replace them with resolved values
+4. **Unresolved placeholders** — scan for any literal `YOUR_ORG_NAME`, `YOUR_REPO_NAME`, `YOUR_PROJECT_TITLE`, or `DEVELOPER_NAME` strings in code files (not CLAUDE.md) and replace them with resolved values
 5. **Variable propagation** — if any value in the Template Variables table was changed (in this or a prior session), verify the new value has been propagated to every file listed in the "Where it appears" column
 6. **Confirm completion** — after all checks pass, briefly state to the user: "Session start checklist complete — no issues found" (or list what was fixed). Then proceed to their request
 
@@ -73,7 +73,7 @@ This triggers the auto-merge workflow, which merges into `main` and deploys to G
 7. **CHANGELOG.md** — every user-facing change must have an entry under `## [Unreleased]` in `repository-information/CHANGELOG.md`. Each entry must include an EST timestamp down to the second (format: `` `YYYY-MM-DD HH:MM:SS EST` — Description``). The `[Unreleased]` section header must also show the date/time of the most recent entry. **Timestamps must be real** — run `TZ=America/New_York date '+%Y-%m-%d %H:%M:%S EST'` to get the actual current time; never fabricate or increment timestamps. **Skip if Template Repo Guard applies (see above)**
 8. **README.md structure tree** — if files or directories were added, moved, or deleted, update the ASCII tree in `README.md`
 9. **Commit message format** — if versions were bumped, the commit message must start with the version prefix(es): `v{VERSION}` for `.gs`, `v{BUILD_VERSION}` for HTML (e.g. `v01.14g v01.02w Fix bug`)
-10. **Developer branding** — any newly created file must have `Developed by: ShadowAISolutions` as the last line (using the appropriate comment syntax for the file type)
+10. **Developer branding** — any newly created file must have `Developed by: DEVELOPER_NAME` as the last line (using the appropriate comment syntax for the file type), where `DEVELOPER_NAME` is resolved from the Template Variables table
 11. **README.md `Last updated:` timestamp** — on every commit, update the `Last updated:` timestamp near the top of `README.md` to the real current time (run `TZ=America/New_York date '+%Y-%m-%d %H:%M:%S EST'`). **This rule always applies — it is NOT skipped by the Template Repo Guard**
 12. **Internal link integrity** — if any markdown file is added, moved, or renamed, verify that all internal links (`[text](path)`) in the repo still resolve to existing files. Pay special attention to cross-directory links — see the Internal Link Reference section for the correct relative paths
 
@@ -99,15 +99,16 @@ These variables are the **single source of truth** for repo-specific values. Whe
 
 | Variable | Value | Where it appears |
 |----------|-------|------------------|
-| `YOUR_ORG_NAME` | `ShadowAISolutions` | LICENSE, README (live site link, "Developed by:" footer), CITATION.cff, "Developed by:" footers (including `index.html` and template HTML), FUNDING.yml, issue templates, GOVERNANCE, SUPPORT, SECURITY, ARCHITECTURE, STATUS, CONTRIBUTING, PR template, workflow file |
+| `YOUR_ORG_NAME` | `ShadowAISolutions` | README (live site link), CITATION.cff (repository URL, site URL), SUPPORT (issue links), SECURITY (advisory link), STATUS (live URL), ARCHITECTURE (diagram URL), issue template config (URLs), workflow file |
 | `YOUR_REPO_NAME` | `autoupdatehtmltemplate` | README (title, structure tree, live site link), CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
 | `YOUR_PROJECT_TITLE` | `autoupdatehtmltemplate` | `<title>` tag in `live-site-pages/index.html` and `live-site-templates/AutoUpdateOnlyHtmlTemplate.html` |
+| `DEVELOPER_NAME` | `ShadowAISolutions` | LICENSE (copyright), README ("Developed by:" footer), CITATION.cff (author name), "Developed by:" footers (all files including `index.html`, template HTML, workflow, issue templates, YAML, Markdown), FUNDING.yml (sponsor handle), GOVERNANCE (ownership), CONTRIBUTING (convention text), PR template (checklist + footer) |
 | `DEVELOPER_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | HTML splash screen `LOGO_URL` variable (in `index.html` and template) |
 | `COMPANY_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | Available for use in pages that need the company logo |
 
 ### How variables work
 - **In code files** (HTML, YAML, Markdown, etc.): use the **resolved value** (e.g. write `ShadowAISolutions`, not `YOUR_ORG_NAME`)
-- **In CLAUDE.md instructions**: the placeholder names (`YOUR_ORG_NAME`, etc.) may appear in examples and rules — Claude Code resolves them using the table above
+- **In CLAUDE.md instructions**: the placeholder names (`YOUR_ORG_NAME`, `DEVELOPER_NAME`, etc.) may appear in examples and rules — Claude Code resolves them using the table above
 
 ---
 > **--- END OF TEMPLATE VARIABLES ---**
@@ -169,7 +170,7 @@ When creating a **new** HTML embedding page, follow every step below:
 6. **Set the initial build-version** — in the HTML `<head>`, set `<meta name="build-version" content="01.00w">` and match it in `<page-name>.version.txt`
 7. **Update the page title** — replace `YOUR_PROJECT_TITLE` in `<title>` with the actual project name
 8. **Register in GAS Projects table** — if this page embeds a GAS iframe, add a row to the GAS Projects table in the Version Bumping section above
-9. **Add developer branding** — ensure `<!-- Developed by: YOUR_ORG_NAME -->` is the last line of the HTML file
+9. **Add developer branding** — ensure `<!-- Developed by: DEVELOPER_NAME -->` is the last line of the HTML file
 
 ### Directory Structure (per embedding page)
 ```
@@ -387,10 +388,10 @@ Files live in three locations: repo root, `.github/`, and `repository-informatio
 
 ## Developer Branding
 *Rule: see Pre-Commit Checklist item #10. Syntax reference below.*
-- HTML: `<!-- Developed by: YOUR_ORG_NAME -->`
-- JavaScript / GAS (.gs): `// Developed by: YOUR_ORG_NAME`
-- YAML: `# Developed by: YOUR_ORG_NAME`
-- CSS: `/* Developed by: YOUR_ORG_NAME */`
+- HTML: `<!-- Developed by: DEVELOPER_NAME -->`
+- JavaScript / GAS (.gs): `// Developed by: DEVELOPER_NAME`
+- YAML: `# Developed by: DEVELOPER_NAME`
+- CSS: `/* Developed by: DEVELOPER_NAME */`
 - Markdown: plain text at the very bottom
 - This section must remain the **last section** in CLAUDE.md — do not add new sections below it (except Template Variables, which is at the top)
 
