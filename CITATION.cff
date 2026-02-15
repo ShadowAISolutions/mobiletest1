@@ -1,13 +1,13 @@
 cff-version: 1.2.0
 message: "If you use this software, please cite it as below."
-title: "autoupdatehtmltemplate"
+title: "demorepo5"
 abstract: "A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script embedding support."
 authors:
   - name: "ShadowAISolutions"
 type: software
 license: "All Rights Reserved"
-repository-code: "https://github.com/ShadowAISolutions/autoupdatehtmltemplate"
-url: "https://ShadowAISolutions.github.io/autoupdatehtmltemplate"
+repository-code: "https://github.com/ShadowAISolutions/demorepo5"
+url: "https://ShadowAISolutions.github.io/demorepo5"
 # Developed by: ShadowAISolutions
 
 

@@ -2,7 +2,7 @@
 
 ```mermaid
 graph TB
-    subgraph "Repository: autoupdatehtmltemplate"
+    subgraph "Repository: demorepo5"
         direction TB
 
         subgraph "Developer Workflow"
@@ -27,14 +27,14 @@ graph TB
 
         subgraph "GitHub Pages Deployment"
             DEPLOY_PAGES["Deploy live-site-pages/ to\nGitHub Pages"]
-            LIVE["Live Site\nShadowAISolutions.github.io/autoupdatehtmltemplate"]
+            LIVE["Live Site\nShadowAISolutions.github.io/demorepo5"]
             DEPLOY_PAGES --> LIVE
         end
 
         subgraph "live-site-pages/ — Hosted Content"
             direction LR
-            INDEX["index.html\n(build-version: 01.00w)"]
-            VERTXT["index.version.txt\n(01.00w)"]
+            INDEX["index.html\n(build-version: 01.01w)"]
+            VERTXT["index.version.txt\n(01.01w)"]
             SND1["sounds/Website_Ready_Voice_1.mp3"]
             SND2["sounds/Code_Ready_Voice_1.mp3"]
         end

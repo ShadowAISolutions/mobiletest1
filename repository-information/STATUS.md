@@ -4,7 +4,7 @@
 
 | Page | File | Version | Live URL | Status |
 |------|------|---------|----------|--------|
-| Landing Page | `live-site-pages/index.html` | v01.01w | [View](https://ShadowAISolutions.github.io/autoupdatehtmltemplate/) | Active |
+| Landing Page | `live-site-pages/index.html` | v01.01w | [View](https://ShadowAISolutions.github.io/demorepo5/) | Active |
 
 ## GAS Projects
 

@@ -7,7 +7,7 @@ These variables are the **single source of truth** for repo-specific values. Whe
 | Variable | Value | Where it appears |
 |----------|-------|------------------|
 | `YOUR_ORG_NAME` | `ShadowAISolutions` | LICENSE, README (live site link, "Developed by:" footer), CITATION.cff, "Developed by:" footers, FUNDING.yml, issue templates, GOVERNANCE, SUPPORT, SECURITY, ARCHITECTURE, STATUS, CONTRIBUTING, PR template, workflow file |
-| `YOUR_REPO_NAME` | `autoupdatehtmltemplate` | README (title, structure tree, live site link), CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
+| `YOUR_REPO_NAME` | `demorepo5` | README (title, structure tree, live site link), CITATION.cff, ARCHITECTURE diagram, STATUS live URL, SUPPORT issue links, SECURITY advisory link, issue template config |
 | `DEVELOPER_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | HTML splash screen `LOGO_URL` variable (in `index.html` and template) |
 | `COMPANY_LOGO_URL` | `https://pfcassociates.github.io/PFC_Website/PFC_images/PFC_LOGO_4_Transparent.png` | Available for use in pages that need the company logo |
 
@@ -17,6 +17,15 @@ These variables are the **single source of truth** for repo-specific values. Whe
 - **When a value changes**: update the table above, then propagate the new value to every file listed in the "Where it appears" column
 - **`YOUR_REPO_NAME` auto-detect** — on first interaction with a repo, check whether the `YOUR_REPO_NAME` value in the table matches the actual GitHub repo name (from the remote URL or directory context). If it doesn't match, update the value in the table **and** propagate the new value to every file listed in the "Where it appears" column
 - **README live site link auto-update** — when `YOUR_REPO_NAME` or `YOUR_ORG_NAME` changes (or on first interaction if the README still contains the placeholder text), replace the placeholder line in README.md with the resolved live site link. The placeholder reads: `You are currently using the **YOUR_REPO_NAME**, update your code and claude will update the live site link here`. Replace it with: `**Live site:** [YOUR_ORG_NAME.github.io/YOUR_REPO_NAME](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME)` (using the resolved values from the table above)
+
+## First Interaction Checklist
+**Before doing ANY work in a new session, complete these checks in order:**
+
+1. **Repo name auto-detect** — run `git remote -v` and compare the actual repo name to the `YOUR_REPO_NAME` value in the Template Variables table. If they differ, update the table value and propagate it to every file in the "Where it appears" column
+2. **README live site link** — check if `README.md` still contains the placeholder text (`You are currently using the **YOUR_REPO_NAME**...`). If so, replace it with: `**Live site:** [YOUR_ORG_NAME.github.io/YOUR_REPO_NAME](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME)` (resolved values)
+3. **Unresolved placeholders** — scan for any literal `YOUR_ORG_NAME`, `YOUR_REPO_NAME`, or `YOUR_PROJECT_TITLE` strings in code files (not CLAUDE.md) and replace them with resolved values
+
+These checks catch template drift that accumulates when the repo is cloned/forked into a new name.
 
 ## Deployment Flow
 - Never push directly to `main`

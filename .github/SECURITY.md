@@ -6,7 +6,7 @@ If you discover a security vulnerability in this project, please report it respo
 
 **Do not open a public issue.** Instead, contact the maintainers directly:
 
-1. Open a [private security advisory](https://github.com/ShadowAISolutions/autoupdatehtmltemplate/security/advisories/new) on this repository
+1. Open a [private security advisory](https://github.com/ShadowAISolutions/demorepo5/security/advisories/new) on this repository
 2. Or email the project maintainers with details of the vulnerability
 
 ## What to Include
