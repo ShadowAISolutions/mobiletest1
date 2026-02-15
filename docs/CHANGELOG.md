@@ -8,6 +8,7 @@ Version suffixes: `w` = website (HTML pages), `g` = Google Apps Script.
 ## [Unreleased] - 2026-02-15
 ### Changed
 - Reverted license back to proprietary (All Rights Reserved) for work use
+- Reset all build-versions to 01.00w (index.html, template, version.txt files) for clean template baseline
 
 ## [v01.04w] - 2026-02-14
 ### Changed

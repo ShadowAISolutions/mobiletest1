@@ -47,7 +47,7 @@ Each GAS project has a code file and a corresponding embedding page. Register th
 - Cache-bust with a query param: `fetch(versionUrl + '?_cb=' + Date.now(), { cache: 'no-store' })`
 - Compare the trimmed response text against the page's `<meta name="build-version">` content
 - The template in `autoUpdateTemplateFiles/AutoUpdateOnlyHtmlTemplate.html` already implements this pattern — use it as a starting point for new projects
-- **The template's build-version must always remain at `01.01w`** — never bump the template's version, even when editing the template itself. The template is a starting point, not a deployed page. Only bump versions on actual embedding pages copied from it
+- **The template's build-version must always remain at `01.00w`** — never bump the template's version, even when editing the template itself. The template is a starting point, not a deployed page. Only bump versions on actual embedding pages copied from it
 
 ### New Embedding Page Setup Checklist
 When creating a **new** HTML embedding page, follow every step below:

@@ -33,8 +33,8 @@ graph TB
 
         subgraph "httpsdocs/ — Hosted Content"
             direction LR
-            INDEX["index.html\n(build-version: 01.04w)"]
-            VERTXT["index.version.txt\n(01.04w)"]
+            INDEX["index.html\n(build-version: 01.00w)"]
+            VERTXT["index.version.txt\n(01.00w)"]
             SND1["sounds/Website_Ready_Voice_1.mp3"]
             SND2["sounds/Code_Ready_Voice_1.mp3"]
         end
@@ -54,7 +54,7 @@ graph TB
         end
 
         subgraph "Template Files"
-            TPL["AutoUpdateOnlyHtmlTemplate.html\n(build-version: 01.01w — never bumped)"]
+            TPL["AutoUpdateOnlyHtmlTemplate.html\n(build-version: 01.00w — never bumped)"]
             TPL_VER["AutoUpdateOnlyHtmlTemplate.version.txt"]
         end
 

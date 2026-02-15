@@ -4,7 +4,7 @@
 
 | Page | File | Version | Live URL | Status |
 |------|------|---------|----------|--------|
-| Landing Page | `httpsdocs/index.html` | v01.04w | [View](https://ShadowAISolutions.github.io/demorepo4/) | Active |
+| Landing Page | `httpsdocs/index.html` | v01.00w | [View](https://ShadowAISolutions.github.io/demorepo4/) | Active |
 
 ## GAS Projects
 
@@ -16,6 +16,6 @@
 
 | Template | File | Version (frozen) |
 |----------|------|------------------|
-| Auto-Update HTML | `autoUpdateTemplateFiles/AutoUpdateOnlyHtmlTemplate.html` | v01.01w |
+| Auto-Update HTML | `autoUpdateTemplateFiles/AutoUpdateOnlyHtmlTemplate.html` | v01.00w |
 
 Developed by: ShadowAISolutions

@@ -24,7 +24,7 @@ For external contributions, open a standard pull request against `main`.
 ### Version Bumping
 
 - **`.gs` files:** Increment the `VERSION` variable by 0.01 (e.g. `"01.13g"` → `"01.14g"`)
-- **Embedding HTML pages:** Increment the `build-version` meta tag by 0.01 (e.g. `"01.04w"` → `"01.05w"`) and update the corresponding `.version.txt` file
+- **Embedding HTML pages:** Increment the `build-version` meta tag by 0.01 (e.g. `"01.00w"` → `"01.01w"`) and update the corresponding `.version.txt` file
 
 ### Commit Messages
 
@@ -40,7 +40,7 @@ For external contributions, open a standard pull request against `main`.
 
 ### Template Rules
 
-- The template file (`autoUpdateTemplateFiles/AutoUpdateOnlyHtmlTemplate.html`) must always remain at build-version `01.01w` — never bump the template
+- The template file (`autoUpdateTemplateFiles/AutoUpdateOnlyHtmlTemplate.html`) must always remain at build-version `01.00w` — never bump the template
 
 See [CLAUDE.md](../CLAUDE.md) for the full list of project conventions.
 
