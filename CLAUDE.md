@@ -7,19 +7,19 @@
 > `Session start: fix template drift`
 > **The user's task is NOT urgent enough to skip this. Do it first. Every time.**
 
-1. **Repo name auto-detect** — run `git remote -v` and compare the actual repo name to the `YOUR_REPO_NAME` value in the Template Variables table. If they differ, update the table value and propagate it to every file in the "Where it appears" column
-2. **README live site link** — **skip this step if `YOUR_REPO_NAME` is `autoupdatehtmltemplate`** (the template repo keeps the placeholder intentionally). Otherwise, check if `README.md` still contains the placeholder text (`You are currently using the **YOUR_REPO_NAME**...`). If so, replace it with: `**Live site:** [YOUR_ORG_NAME.github.io/YOUR_REPO_NAME](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME)` (resolved values)
-3. **Unresolved placeholders** — scan for any literal `YOUR_ORG_NAME`, `YOUR_REPO_NAME`, or `YOUR_PROJECT_TITLE` strings in code files (not CLAUDE.md) and replace them with resolved values
-4. **Variable propagation** — if any value in the Template Variables table was changed (in this or a prior session), verify the new value has been propagated to every file listed in the "Where it appears" column
-5. **Branch hygiene** — run `git remote set-head origin main` to ensure `origin/HEAD` points to `main`. If a local `master` branch exists and points to the same commit as `origin/main`, delete it with `git branch -D master`. This prevents the auto-merge workflow from failing with exit code 128 due to branch misconfiguration
-6. **Confirm completion** — after all checks pass, briefly state to the user: "Session start checklist complete — no issues found" (or list what was fixed). Then proceed to their request
+1. **Template repo short-circuit** — run `git remote -v` and extract the repo name. If it is `autoupdatehtmltemplate`, skip all remaining checklist steps and proceed directly to the user's request. The remaining steps exist to catch template drift on forks/clones and are not needed on the template repo itself
+2. **Repo name auto-detect** — compare the actual repo name to the `YOUR_REPO_NAME` value in the Template Variables table. If they differ, update the table value and propagate it to every file in the "Where it appears" column
+3. **README live site link** — check if `README.md` still contains the placeholder text (`You are currently using the **YOUR_REPO_NAME**...`). If so, replace it with: `**Live site:** [YOUR_ORG_NAME.github.io/YOUR_REPO_NAME](https://YOUR_ORG_NAME.github.io/YOUR_REPO_NAME)` (resolved values)
+4. **Unresolved placeholders** — scan for any literal `YOUR_ORG_NAME`, `YOUR_REPO_NAME`, or `YOUR_PROJECT_TITLE` strings in code files (not CLAUDE.md) and replace them with resolved values
+5. **Variable propagation** — if any value in the Template Variables table was changed (in this or a prior session), verify the new value has been propagated to every file listed in the "Where it appears" column
+6. **Branch hygiene** — run `git remote set-head origin main` to ensure `origin/HEAD` points to `main`. If a local `master` branch exists and points to the same commit as `origin/main`, delete it with `git branch -D master`. This prevents the auto-merge workflow from failing with exit code 128 due to branch misconfiguration
+7. **Confirm completion** — after all checks pass, briefly state to the user: "Session start checklist complete — no issues found" (or list what was fixed). Then proceed to their request
 
 These checks catch template drift that accumulates when the repo is cloned/forked into a new name.
 
 ## Template Repo Guard
 > When `YOUR_REPO_NAME` is `autoupdatehtmltemplate` (i.e. this is the template repo itself, not a fork/clone):
-> - **Session Start Checklist item #2** is skipped — the README placeholder is intentional
-> - **Session Start Checklist item #3** — do NOT resolve placeholder variables in `live-site-pages/index.html` or `live-site-templates/AutoUpdateOnlyHtmlTemplate.html` — both files intentionally keep literal placeholders (e.g. `YOUR_PROJECT_TITLE`) so forks start with them. On forks (where `YOUR_REPO_NAME` differs), checklist #3 resolves these placeholders in **both** files using the Template Variables table
+> - **Session Start Checklist is skipped** — item #1 short-circuits the entire checklist. The remaining items only apply to forks/clones
 > - **Pre-Commit Checklist items #2, #3, #5, #7** are skipped unless the user explicitly requests version bumps or changelog entries — the template repo's HTML pages and documentation should not auto-increment
 > - **GitHub Pages deployment is skipped** — the workflow's `deploy` job checks `github.event.repository.name != 'autoupdatehtmltemplate'` and won't run on the template repo
 > - Pre-Commit items #1 (`.gs` version bump), #4, #6, #8, #9, #10 still apply normally
