@@ -279,7 +279,7 @@ For pages that live directly in `live-site-pages/` (not in a subdirectory), the 
 - For binary files (e.g. `.mp3`): append a null byte
 - **Reset `repository-information/CHANGELOG.md`** — replace all entries with a fresh template (keep the header, version suffix note, and an empty `[Unreleased]` section with `*(No changes yet)*`). This gives the repo a clean history starting point
 - **Update `Last updated:` in `README.md`** — set the timestamp to the real current time (run `TZ=America/New_York date '+%Y-%m-%d %I:%M:%S %p EST'`). This is the only substantive edit besides the no-op touches
-- Commit message: `Phantom edit to align all file timestamps on GitHub` (no version prefix)
+- Commit message: `Auto Update HTML Template Created` (no version prefix)
 
 ---
 > **--- END OF PHANTOM EDIT ---**
