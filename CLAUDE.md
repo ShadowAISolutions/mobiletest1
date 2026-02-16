@@ -153,7 +153,7 @@ If any pre-push check fails, do NOT proceed with `git push`. Instead:
 
 These variables are the **single source of truth** for repo-specific values. When a variable value is changed here, Claude Code must propagate the new value to every file in the repo that uses it.
 
-| Variable | Value | Where it appears &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | Description |
+| Variable | Value | Where it appears | Description &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; |
 |----------|-------|------------------|-------------|
 | `YOUR_ORG_NAME` | YourOrgName | README (live site link), CITATION.cff (repository URL, site URL), STATUS (live URL), ARCHITECTURE (diagram URL), issue template config (URLs) | GitHub org or username that owns this repo. Auto-detected from `git remote -v` on forks; frozen as a placeholder on the template repo so drift checks can detect forks and replace the template's real org name (`ShadowAISolutions`) with the fork's actual org |
 | `YOUR_ORG_LOGO_URL` | https://logoipsum.com/logoipsum-avatar.png | `index.html` and template HTML (`YOUR_ORG_LOGO_URL` JS variable), available for use in pages that need the org logo | URL to the org's logo image. Used in HTML pages where a branded logo is needed (e.g. splash screens, headers). Replace with your org's actual logo URL after forking |
