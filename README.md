@@ -2,7 +2,7 @@
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-Last updated: `2026-02-15 10:38:43 PM EST`
+Last updated: `2026-02-15 10:42:24 PM EST`
 
 You are currently using the **autoupdatehtmltemplate** developed by **ShadowAISolutions**<br>
 Update your code and claude will update the live site link here
@@ -76,7 +76,6 @@ autoupdatehtmltemplate/
 │   ├── workflows/              # CI/CD pipeline
 │   ├── ISSUE_TEMPLATE/         # Bug report & feature request forms
 │   ├── PULL_REQUEST_TEMPLATE.md # PR checklist
-│   ├── CODE_OF_CONDUCT.md      # Community standards
 │   └── FUNDING.yml             # Sponsor button config
 ├── repository-information/
 │   ├── ARCHITECTURE.md         # System diagram (Mermaid)
@@ -88,6 +87,7 @@ autoupdatehtmltemplate/
 │   └── SUPPORT.md              # Getting help
 ├── CITATION.cff                # Citation metadata
 ├── CLAUDE.md                   # Developer instructions
+├── CODE_OF_CONDUCT.md          # Community standards
 ├── CONTRIBUTING.md             # How to contribute
 ├── LICENSE                     # Proprietary license
 └── SECURITY.md                 # Vulnerability reporting
@@ -112,7 +112,7 @@ autoupdatehtmltemplate/
 
 | Document | Description |
 |----------|-------------|
-| [Code of Conduct](.github/CODE_OF_CONDUCT.md) | Community standards and expectations |
+| [Code of Conduct](CODE_OF_CONDUCT.md) | Community standards and expectations |
 | [Contributing](CONTRIBUTING.md) | How to contribute to this project |
 | [Security Policy](SECURITY.md) | How to report vulnerabilities |
 | [Support](repository-information/SUPPORT.md) | Getting help |

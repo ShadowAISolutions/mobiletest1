@@ -361,13 +361,16 @@ Update these only when the change is genuinely relevant — don't force unnecess
 
 Files live in three locations: repo root, `.github/`, and `repository-information/`. Cross-directory links must use `../` to traverse up before descending into the target directory.
 
+### Why community health files live at root (not `.github/`)
+GitHub renders community health files (`CONTRIBUTING.md`, `SECURITY.md`, `CODE_OF_CONDUCT.md`) in two contexts: the **blob view** (direct file URL) and the **community sidebar tabs** on the repo's main page. These two contexts use different base URLs for resolving relative links — blob view uses `/org/repo/blob/main/.github/`, while the sidebar tab uses `/org/repo/tree/main`. Any relative link with `../` (needed to escape `.github/`) breaks in the tab context because the `../` traverses into GitHub's URL structure instead of the file system. Moving these files to the repo root eliminates the mismatch — root-level relative links resolve identically in both contexts, just like `README.md` links. `CODE_OF_CONDUCT.md` is included even though it currently has no links, to ensure future links work correctly without needing a file move.
+
 ### File locations
 | File | Actual path |
 |------|-------------|
 | README.md | `./README.md` (root) |
 | CLAUDE.md | `./CLAUDE.md` (root) |
 | LICENSE | `./LICENSE` (root) |
-| CODE_OF_CONDUCT.md | `.github/CODE_OF_CONDUCT.md` |
+| CODE_OF_CONDUCT.md | `./CODE_OF_CONDUCT.md` (root) |
 | CONTRIBUTING.md | `./CONTRIBUTING.md` (root) |
 | SECURITY.md | `./SECURITY.md` (root) |
 | PULL_REQUEST_TEMPLATE.md | `.github/PULL_REQUEST_TEMPLATE.md` |
@@ -380,10 +383,6 @@ Files live in three locations: repo root, `.github/`, and `repository-informatio
 | TODO.md | `repository-information/TODO.md` |
 
 ### Common cross-directory link patterns
-| From directory | To file in `.github/` | Correct relative path |
-|----------------|----------------------|----------------------|
-| `repository-information/` | `.github/CODE_OF_CONDUCT.md` | `../.github/CODE_OF_CONDUCT.md` |
-
 | From directory | To file in `repository-information/` | Correct relative path |
 |----------------|--------------------------------------|----------------------|
 | `.github/` | `repository-information/SUPPORT.md` | `../repository-information/SUPPORT.md` |
@@ -395,6 +394,7 @@ Files live in three locations: repo root, `.github/`, and `repository-informatio
 | `repository-information/` | `CLAUDE.md` | `../CLAUDE.md` |
 | `repository-information/` | `CONTRIBUTING.md` | `../CONTRIBUTING.md` |
 | `repository-information/` | `SECURITY.md` | `../SECURITY.md` |
+| `repository-information/` | `CODE_OF_CONDUCT.md` | `../CODE_OF_CONDUCT.md` |
 | `.github/` | `README.md` | `../README.md` |
 | `.github/` | `CLAUDE.md` | `../CLAUDE.md` |
 
