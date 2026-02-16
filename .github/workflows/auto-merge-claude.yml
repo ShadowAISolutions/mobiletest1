@@ -146,7 +146,9 @@ jobs:
       - name: Check IS_TEMPLATE_REPO in CLAUDE.md
         id: check
         run: |
-          if grep -qP '^\| `IS_TEMPLATE_REPO` \| `Yes`' CLAUDE.md 2>/dev/null; then
+          TEMPLATE_VALUE=$(grep -oP '^\| `IS_TEMPLATE_REPO` \| `\K[^`]+' CLAUDE.md || echo "")
+          REPO_NAME="${{ github.event.repository.name }}"
+          if [ -n "$TEMPLATE_VALUE" ] && [ "$TEMPLATE_VALUE" != "No" ] && [ "$TEMPLATE_VALUE" = "$REPO_NAME" ]; then
             echo "is-template=true" >> "$GITHUB_OUTPUT"
           else
             echo "is-template=false" >> "$GITHUB_OUTPUT"
