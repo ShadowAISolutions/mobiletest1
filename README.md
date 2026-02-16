@@ -2,12 +2,14 @@
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-Last updated: `2026-02-15 06:13:11 PM EST`
+Last updated: `2026-02-15 07:53:24 PM EST`
 
 You are currently using the **autoupdatehtmltemplate** developed by **ShadowAISolutions**<br>
 Update your code and claude will update the live site link here
 
 ## Copy This Repository
+
+> **Tip:** The links below navigate away from this page. **Shift + click** (or right-click → *Open in new window*) to keep these instructions visible while you work.
 
 1. Go to [**GitHub Importer**](https://github.com/new/import)
 2. Under **The URL for your source repository**, enter: `https://github.com/ShadowAISolutions/autoupdatehtmltemplate`
@@ -20,7 +22,7 @@ After copying this template and you see it in your own repository, follow these 
 
 ### 1. Enable GitHub Pages
 
-Go to your repository's [**Pages settings**](../../settings/pages) and configure:
+Go to your repository's [**Pages settings**](https://github.com/ShadowAISolutions/autoupdatehtmltemplate/settings/pages) and configure:
 
 - **Source**: Select **GitHub Actions** (not "Deploy from a branch")
 
@@ -28,7 +30,7 @@ Go to your repository's [**Pages settings**](../../settings/pages) and configure
 
 ### 2. Configure the `github-pages` Environment
 
-Go to your repository's [**Environments settings**](../../settings/environments), click into the `github-pages` environment, and:
+Go to your repository's [**Environments settings**](https://github.com/ShadowAISolutions/autoupdatehtmltemplate/settings/environments), click into the `github-pages` environment, and:
 
 - Select the dropdown next to the **Deployment branches and tags** heading and choose **No restriction**
 
