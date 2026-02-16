@@ -129,7 +129,7 @@ These variables are the **single source of truth** for repo-specific values. Whe
 | `YOUR_ORG_NAME` | `YourOrgName` | README (live site link), CITATION.cff (repository URL, site URL), STATUS (live URL), ARCHITECTURE (diagram URL), issue template config (URLs) |
 | `YOUR_ORG_LOGO_URL` | `https://logoipsum.com/logoipsum-avatar.png` | `index.html` and template HTML (`YOUR_ORG_LOGO_URL` JS variable), available for use in pages that need the org logo |
 | `YOUR_REPO_NAME` | `YourRepoName` | README (structure tree, live site link), CITATION.cff (repository URL, site URL), STATUS (live URL), ARCHITECTURE (diagram URL), issue template config (URLs) |
-| `YOUR_PROJECT_TITLE` | `CHANGE THIS TITLE - Auto Update HTML Template` | `<title>` tag in `live-site-pages/index.html` and `live-site-templates/AutoUpdateOnlyHtmlTemplate.html` |
+| `YOUR_PROJECT_TITLE` | `CHANGE THIS PROJECT TITLE - Auto Update HTML Template` | `<title>` tag in `live-site-pages/index.html` and `live-site-templates/AutoUpdateOnlyHtmlTemplate.html` |
 | `DEVELOPER_NAME` | `ShadowAISolutions` | LICENSE (copyright), README ("Developed by:" footer), CITATION.cff (author name), "Developed by:" footers (all files including `index.html`, template HTML, workflow, issue templates, YAML, Markdown), FUNDING.yml (sponsor handle), GOVERNANCE (ownership), CONTRIBUTING (convention text), PR template (checklist + footer) |
 | `DEVELOPER_LOGO_URL` | `https://www.shadowaisolutions.com/SAIS%20Logo.png` | HTML splash screen `LOGO_URL` variable (in `index.html` and template) |
 
