@@ -2,14 +2,14 @@
 
 A GitHub Pages deployment framework with automatic version polling, auto-refresh, and Google Apps Script (GAS) embedding support.
 
-Last updated: `2026-02-16 11:53:20 AM EST`
+Last updated: `2026-02-16 11:55:10 AM EST`
 
 You are currently using the **autoupdatehtmltemplate** developed by **ShadowAISolutions**<br>
 Update your code and claude will update the live site link here
 
 ## Copy This Repository
 
-> **Tip:** The links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep these steps visible while you work.
+> **Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep these steps visible while you work.
 
 1. Go to [**GitHub Importer**](https://github.com/new/import)
 2. Under **The URL for your source repository**, enter: `https://github.com/ShadowAISolutions/autoupdatehtmltemplate`
@@ -20,7 +20,7 @@ Update your code and claude will update the live site link here
 
 > **Important:** The links in steps 1 and 2 below point to the settings of **whichever repo you are viewing this page from**. Make sure you are reading this on **your own copy** of the repository, not on the original template repo — otherwise the links will lead to a 404 page.
 
-> **Tip:** The links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep these steps visible while you work.
+> **Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep these steps visible while you work.
 
 ### 1. Enable GitHub Pages
 
@@ -98,7 +98,7 @@ autoupdatehtmltemplate/
 
 ## Documentation
 
-> **Tip:** The links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep these steps visible while you work.
+> **Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep these steps visible while you work.
 
 | Document | Description |
 |----------|-------------|
@@ -111,7 +111,7 @@ autoupdatehtmltemplate/
 
 ## Community
 
-> **Tip:** The links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep these steps visible while you work.
+> **Tip:** Links below navigate away from this page. **Ctrl + click** (or right-click → *Open in new tab*) to keep these steps visible while you work.
 
 | Document | Description |
 |----------|-------------|
