@@ -92,7 +92,11 @@
 ```
 
 ### Hook anticipation — bug context
-The timing and method requirements in the Hook anticipation bullet were added after a misfire on a fork (demorepo2). During initialization, two commits were pushed in the same response, but Claude mentally predicted the hook conditions *before* the push completed — concluding there were unpushed commits. It wrote `🐟🐟AWAITING HOOK🐟🐟`, but the push had already succeeded, so all three conditions were false. The hook correctly did not fire, leaving the conversation stuck. The fix added two explicit requirements: (1) evaluate *after* all actions complete (including `git push`), and (2) *actually run* the git commands rather than predicting the outcome.
+**The failure pattern:** if the hook conditions are evaluated *before* a `git push` completes (or evaluated mentally instead of actually running the git commands), the prediction can be wrong — e.g. concluding there are unpushed commits when the push already succeeded. Writing `🐟🐟AWAITING HOOK🐟🐟` in that case means the hook never fires (because all conditions are actually false), and the conversation gets stuck with no `✅✅CODING COMPLETE✅✅`.
+
+**What to watch for:** any scenario where actions (especially `git push`) complete in the same response as the hook check. The temptation is to predict the outcome rather than wait and verify.
+
+**The fix:** (1) always evaluate *after* all actions in the response are complete, and (2) *actually run* the three git commands — never reason about their output mentally.
 
 ---
 > **--- END OF CHAT BOOKENDS ---**
