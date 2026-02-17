@@ -21,7 +21,7 @@
 - **Last output**: for every user prompt, the very last line written to chat after all work is done must be exactly: `✅✅CODING_COMPLETE✅✅`
 - These apply to **every single user message**, not just once per session
 - These bookend lines are standalone — do not combine them with other text on the same line
-- **Timestamps on bookends** — every bookend marker must include a real EST timestamp on the same line, placed after the marker text in square brackets. Format: `BOOKEND [HH:MM:SS AM/PM EST]`. Run `TZ=America/New_York date '+%I:%M:%S %p EST'` to get the actual current time — never fabricate timestamps. This applies to all bookend markers listed in the summary table below. The timestamp goes on the **same line** as the bookend (this is the one exception to the "standalone" rule — the timestamp is part of the marker, not separate text). For end-of-response section headers (AGENTS_USED, FILES_CHANGED, COMMIT_LOG, WORTH_NOTING, SUMMARY), the timestamp is optional — add it only to SUMMARY (the final one) to mark when the response wrapped up
+- **Timestamps on bookends** — every bookend marker must include a real EST timestamp on the same line, placed after the marker text in square brackets. Format: `BOOKEND [HH:MM:SS AM/PM EST]`. Run `TZ=America/New_York date '+%I:%M:%S %p EST'` to get the actual current time — never fabricate timestamps. This applies to all bookend markers listed in the summary table below. The timestamp goes on the **same line** as the bookend (this is the one exception to the "standalone" rule — the timestamp is part of the marker, not separate text). End-of-response section headers (AGENTS_USED, FILES_CHANGED, COMMIT_LOG, WORTH_NOTING, SUMMARY) do not get timestamps — CODING_COMPLETE always immediately follows SUMMARY, so its timestamp already marks when the response wrapped up
 
 ### Bookend Summary
 
@@ -41,7 +41,7 @@
 | `📁📁FILES_CHANGED📁📁` | Files were modified/created/deleted | After AGENTS_USED (skip if no files changed) | — |
 | `🔗🔗COMMIT_LOG🔗🔗` | Commits were made | After FILES_CHANGED (skip if no commits made) | — |
 | `🔖🔖WORTH_NOTING🔖🔖` | Something deserves attention | After COMMIT_LOG (skip if nothing worth noting) | — |
-| `📝📝SUMMARY📝📝 [HH:MM:SS AM EST]` | Changes were made in the response | Last section before CODING_COMPLETE | Required |
+| `📝📝SUMMARY📝📝` | Changes were made in the response | Last section before CODING_COMPLETE | — |
 | `✅✅CODING_COMPLETE✅✅ [HH:MM:SS AM EST]` | All work done | Always the very last line of response | Required |
 
 ### Flow Examples
@@ -67,7 +67,7 @@
   `new-file.js` (created)
 🔗🔗COMMIT_LOG🔗🔗
   abc1234 — Add feature X
-📝📝SUMMARY📝📝 [01:17:15 AM EST]
+📝📝SUMMARY📝📝
   - Updated X in `file.md` (edited)
   - Created `new-file.js` (created)
 ✅✅CODING_COMPLETE✅✅ [01:17:15 AM EST]
@@ -90,7 +90,7 @@
   `file.md` (edited)
 🔗🔗COMMIT_LOG🔗🔗
   abc1234 — Add feature X
-📝📝SUMMARY📝📝 [01:17:10 AM EST]
+📝📝SUMMARY📝📝
   - Updated X in `file.md`
   - Pushed to remote
 ✅✅CODING_COMPLETE✅✅ [01:17:10 AM EST]
