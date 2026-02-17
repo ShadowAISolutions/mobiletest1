@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="build-version" content="01.00w">
+  <meta name="build-version" content="01.01w">
   <meta name="template-id" content="sais-aut-7f3e9b2d">
   <title>YOUR_PROJECT_TITLE</title>
   <style>
@@ -138,9 +138,9 @@
         };
         if (_audioCtx.state === 'running') {
           _playNow();
-        } else {
-          // Give auto-resume (line 52) a moment to settle, then play only if it succeeded
-          setTimeout(function() { if (_audioCtx.state === 'running') _playNow(); }, 500);
+        } else if (_resumePromise) {
+          // Chain onto the resume promise so playback fires as soon as resume completes
+          _resumePromise.then(function() { if (_audioCtx.state === 'running') _playNow(); });
         }
       }
       if (splash) {

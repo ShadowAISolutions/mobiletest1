@@ -4,7 +4,7 @@
 
 | Page | File | Version | Live URL | Status |
 |------|------|---------|----------|--------|
-| Landing Page | `live-site-pages/index.html` | v01.00w | *(deploy to activate)* | Active |
+| Landing Page | `live-site-pages/index.html` | v01.01w | *(deploy to activate)* | Active |
 
 ## GAS Projects
 

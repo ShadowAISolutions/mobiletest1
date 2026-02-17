@@ -138,9 +138,9 @@
         };
         if (_audioCtx.state === 'running') {
           _playNow();
-        } else {
-          // Give auto-resume a moment to settle, then play only if it succeeded
-          setTimeout(function() { if (_audioCtx.state === 'running') _playNow(); }, 500);
+        } else if (_resumePromise) {
+          // Chain onto the resume promise so playback fires as soon as resume completes
+          _resumePromise.then(function() { if (_audioCtx.state === 'running') _playNow(); });
         }
       }
       if (splash) {
