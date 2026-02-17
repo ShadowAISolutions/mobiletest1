@@ -115,6 +115,31 @@
 
 **The fix:** (1) always evaluate *after* all actions in the response are complete, and (2) *actually run* the three git commands — never reason about their output mentally.
 
+### Token Budget Reference
+The bookend system adds overhead to every response. Use this reference if you're troubleshooting token usage.
+
+**Per-response bookend overhead (output tokens):**
+
+| Component | ~Tokens | Notes |
+|-----------|---------|-------|
+| CODING_PLAN line + bullets | 40–60 | 3–5 bullets typical |
+| CODING_START line | ~15 | Shared `date` call with CODING_PLAN |
+| Mid-response markers (RESEARCHING, VERIFYING, etc.) | 30–45 | Avg 2–3 per response |
+| `⏱️` duration lines | 20–30 | Avg 3–4 per response |
+| `date` command tool calls + results | 120–180 | ~25–35 tokens per round-trip × 4–6 calls |
+| End-of-response block (divider → SUMMARY) | 80–150 | Scales with number of files/commits |
+| CODING_COMPLETE line | ~15 | — |
+| **Total bookend overhead** | **~320–480** | **~5–15% of a typical response** |
+
+**Context (input tokens):**
+- The CLAUDE.md instructions themselves are ~10K+ input tokens loaded into every prompt — this is the larger fixed cost
+- Bookend output overhead is small relative to the instruction payload
+
+**Where to cut if hitting limits:**
+1. `date` calls are the biggest per-token cost — the shared CODING_PLAN/CODING_START call already saves one per response
+2. Mid-response markers (RESEARCHING, NEXT_PHASE, etc.) can be skipped on very short responses where the phase is obvious
+3. End-of-response sections (WORTH_NOTING, FILES_CHANGED) are already skip-if-empty — they cost nothing when unused
+
 ---
 > **--- END OF CHAT BOOKENDS ---**
 ---
