@@ -3,6 +3,7 @@
 ## Chat Bookends (MANDATORY — EVERY PROMPT)
 - **First output**: for every user prompt, the very first line written to chat must be exactly: `⚡⚡CODING START⚡⚡`
 - **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK FEEDBACK⚓⚓` as the first line instead of `⚡⚡CODING START⚡⚡`
+- **Hook timing limitation**: stop hooks run *after* the response is complete, so `✅✅CODING COMPLETE✅✅` will always appear before `⚓⚓HOOK FEEDBACK⚓⚓` — there is no way to suppress the closing bookend preemptively since hook feedback cannot be predicted
 - **Last output**: for every user prompt, the very last line written to chat after all work is done must be exactly: `✅✅CODING COMPLETE✅✅`
 - These apply to **every single user message**, not just once per session
 - These bookend lines are standalone — do not combine them with other text on the same line
