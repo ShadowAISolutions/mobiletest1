@@ -3,7 +3,7 @@
 ## Chat Bookends (MANDATORY — EVERY PROMPT)
 - **First output**: for every user prompt, the very first line written to chat must be exactly: `⚡⚡CODING START⚡⚡`
 - **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK FEEDBACK⚓⚓` as the first line instead of `⚡⚡CODING START⚡⚡`
-- **Hook anticipation**: before writing `✅✅CODING COMPLETE✅✅`, check whether the stop hook (`~/.claude/stop-hook-git-check.sh`) will fire by evaluating its conditions: (a) uncommitted changes — `git diff --quiet && git diff --cached --quiet`, (b) untracked files — `git ls-files --others --exclude-standard`, (c) unpushed commits — `git rev-list origin/<branch>..HEAD --count`. If any condition is true, **omit** `✅✅CODING COMPLETE✅✅` and instead write `🐟🐟AWAITING HOOK🐟🐟` as the last line of the current response — the hook will fire, and `✅✅CODING COMPLETE✅✅` should close the hook feedback response instead
+- **Hook anticipation**: before writing `✅✅CODING COMPLETE✅✅`, check whether the stop hook (`~/.claude/stop-hook-git-check.sh`) will fire. **This check must happen after all actions in the current response are complete** (including any `git push`) — do not predict the pre-action state; check the actual post-action state. **Actually run** the three git commands (do not evaluate mentally): (a) uncommitted changes — `git diff --quiet && git diff --cached --quiet`, (b) untracked files — `git ls-files --others --exclude-standard`, (c) unpushed commits — `git rev-list origin/<branch>..HEAD --count`. If any condition is true, **omit** `✅✅CODING COMPLETE✅✅` and instead write `🐟🐟AWAITING HOOK🐟🐟` as the last line of the current response — the hook will fire, and `✅✅CODING COMPLETE✅✅` should close the hook feedback response instead
 - **Last output**: for every user prompt, the very last line written to chat after all work is done must be exactly: `✅✅CODING COMPLETE✅✅`
 - These apply to **every single user message**, not just once per session
 - These bookend lines are standalone — do not combine them with other text on the same line
@@ -14,7 +14,7 @@
 |---------|------|----------|
 | `⚡⚡CODING START⚡⚡` | User sends a message | First line of response |
 | `⚓⚓HOOK FEEDBACK⚓⚓` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING START) |
-| `🐟🐟AWAITING HOOK🐟🐟` | Hook is anticipated (unpushed commits, uncommitted changes, or untracked files detected) | Last line of response (replaces CODING COMPLETE) |
+| `🐟🐟AWAITING HOOK🐟🐟` | Hook conditions are true after all actions complete (unpushed commits, uncommitted changes, or untracked files detected by running git commands) | Last line of response (replaces CODING COMPLETE) |
 | `✅✅CODING COMPLETE✅✅` | All work is done and no hook is anticipated | Last line of response |
 
 ### Flow Examples
@@ -34,6 +34,14 @@
   ← hook fires →
 ⚓⚓HOOK FEEDBACK⚓⚓
   ... push ...
+✅✅CODING COMPLETE✅✅
+```
+
+**Commit-and-push flow (no hook needed):**
+```
+⚡⚡CODING START⚡⚡
+  ... work (commit AND push in same response) ...
+  ... run git hook checks — all clean ...
 ✅✅CODING COMPLETE✅✅
 ```
 
