@@ -12,7 +12,7 @@
 - **Verifying**: output `🧪🧪VERIFYING🧪🧪` on its own line when entering a verification phase — running git hook checks, confirming no stale references, validating edits post-change. Separates "doing the work" from "checking the work"
 - **Hook anticipation**: before writing `✅✅CODING_COMPLETE✅✅`, check whether the stop hook (`~/.claude/stop-hook-git-check.sh`) will fire. **This check must happen after all actions in the current response are complete** (including any `git push`) — do not predict the pre-action state; check the actual post-action state. **Actually run** the three git commands (do not evaluate mentally): (a) uncommitted changes — `git diff --quiet && git diff --cached --quiet`, (b) untracked files — `git ls-files --others --exclude-standard`, (c) unpushed commits — `git rev-list origin/<branch>..HEAD --count`. If any condition is true, **omit** `✅✅CODING_COMPLETE✅✅` and instead write `🐟🐟AWAITING_HOOK🐟🐟` as the last line of the current response — the hook will fire, and `✅✅CODING_COMPLETE✅✅` should close the hook feedback response instead. **Do not forget the `⏱️` duration annotation** — AWAITING_HOOK is a bookend like any other, so the previous phase's `⏱️` must appear immediately before it. After the hook anticipation git commands complete, call `date`, compute the duration since the previous bookend's timestamp, write the `⏱️` line, then write AWAITING_HOOK
 - **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK_FEEDBACK⚓⚓` as the first line instead of `🚩🚩CODING_PLAN🚩🚩` or `⚡⚡CODING_START⚡⚡`. The coding plan (if applicable) follows immediately after `⚓⚓HOOK_FEEDBACK⚓⚓`, then `⚡⚡CODING_START⚡⚡`
-- **End-of-response sections**: after all work is done, output the following sections in this exact order. Skip the entire block only if the response was purely informational with no changes made. **The entire block — from the `---` divider through CODING_COMPLETE — must be written as one continuous text output with no tool calls in between.** To achieve this, run the `date` command for CODING_COMPLETE's timestamp **before** starting the block, then output: the last phase's `⏱️` duration, a `---` divider on its own line (visually separating work phases from the end-of-response block), then AGENTS_USED through CODING_COMPLETE using the pre-fetched timestamp:
+- **End-of-response sections**: after all work is done, output the following sections in this exact order. Skip the entire block only if the response was purely informational with no changes made. **The entire block — from the `━━━` divider through CODING_COMPLETE — must be written as one continuous text output with no tool calls in between.** To achieve this, run the `date` command for CODING_COMPLETE's timestamp **before** starting the block, then output: the last phase's `⏱️` duration, a `━━━━━━━━━━━━━━━━━━━━━━━━━━━━` divider on its own line (Unicode heavy horizontal line — visually separating work phases from the end-of-response block), then AGENTS_USED through CODING_COMPLETE using the pre-fetched timestamp:
   - **Agents used**: output `🕵🕵AGENTS_USED🕵🕵` followed by a list of all agents that contributed to this response — including Agent 0 (Main). Format: `Agent N (Type) — brief description of contribution`. This appears in every response that performed work. Skip only if the response was purely informational with no actions taken
   - **Files changed**: output `📁📁FILES_CHANGED📁📁` followed by a list of every file modified in the response, each tagged with the type of change: `(edited)`, `(created)`, or `(deleted)`. This gives a clean at-a-glance file manifest. Skip if no files were changed in the response
   - **Commit log**: output `🔗🔗COMMIT_LOG🔗🔗` followed by a list of every commit made in the response, formatted as `SHORT_SHA — commit message`. Skip if no commits were made in the response
@@ -39,7 +39,7 @@
 | `🐟🐟AWAITING_HOOK🐟🐟 [HH:MM:SS AM EST]` | Hook conditions true after all actions | After verifying; replaces CODING_COMPLETE when hook will fire | Required | `⏱️` before HOOK_FEEDBACK |
 | `⚓⚓HOOK_FEEDBACK⚓⚓ [HH:MM:SS AM EST]` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING_PLAN as opener) | Required | `⏱️` before end-of-response block |
 | `⏱️ Xs` | Phase just ended | Immediately before the next bookend marker | — | Computed |
-| `---` | End-of-response block begins | After last `⏱️`, before AGENTS_USED | — | — |
+| `━━━━━━━━━━━━━━━━━━━━━━━━━━━━` | End-of-response block begins | After last `⏱️`, before AGENTS_USED | — | — |
 | `🕵🕵AGENTS_USED🕵🕵` | Response performed work | First end-of-response section | — | — |
 | `📁📁FILES_CHANGED📁📁` | Files were modified/created/deleted | After AGENTS_USED (skip if no files changed) | — | — |
 | `🔗🔗COMMIT_LOG🔗🔗` | Commits were made | After FILES_CHANGED (skip if no commits made) | — | — |
@@ -67,7 +67,7 @@
 🧪🧪VERIFYING🧪🧪 [01:17:00 AM EST]
   ... validating edits, running hook checks ...
   ⏱️ 15s
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🕵🕵AGENTS_USED🕵🕵
   Agent 0 (Main) — applied changes, ran checklists
 📁📁FILES_CHANGED📁📁
@@ -95,7 +95,7 @@
 ⚓⚓HOOK_FEEDBACK⚓⚓ [01:16:50 AM EST]
   ... push ...
   ⏱️ 20s
----
+━━━━━━━━━━━━━━━━━━━━━━━━━━━━
 🕵🕵AGENTS_USED🕵🕵
   Agent 0 (Main) — applied changes, pushed
 📁📁FILES_CHANGED📁📁
