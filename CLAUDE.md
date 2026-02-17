@@ -22,27 +22,29 @@
 - These apply to **every single user message**, not just once per session
 - These bookend lines are standalone — do not combine them with other text on the same line
 - **Timestamps on bookends** — every bookend marker must include a real EST timestamp on the same line, placed after the marker text in square brackets. Format: `BOOKEND [HH:MM:SS AM/PM EST]`. **You must run `TZ=America/New_York date '+%I:%M:%S %p EST'` via the Bash tool and get the result BEFORE writing the bookend line** — you have no internal clock, so any timestamp written without calling `date` first is fabricated. Do not guess, estimate, or anchor on times mentioned in the user's message. The small delay before text appears is an acceptable tradeoff for accuracy. For the first bookend in a response (CODING_PLAN or CODING_START), this means the `date` call is the very first action — before any text output. For subsequent bookends mid-response, call `date` inline before writing the marker. End-of-response section headers (AGENTS_USED, FILES_CHANGED, COMMIT_LOG, WORTH_NOTING, SUMMARY) do not get timestamps — CODING_COMPLETE always immediately follows SUMMARY, so its timestamp already marks when the response wrapped up
+- **Duration annotations** — when a phase ends (i.e. the next bookend is about to be written), output `⏱️ Xs` (or `Xm Ys` for durations over 60 seconds) on its own line immediately **before** the next bookend marker. The duration is calculated by subtracting the current phase's start timestamp from the next phase's start timestamp. **You must run `date` to get the current time and compute the difference** — never estimate durations mentally. Duration annotations apply to all mid-work bookends that have a successor: CHECKLIST, RESEARCHING, NEXT_PHASE, VERIFYING, and CODING_START (when followed by another bookend). They do **not** apply to: CODING_PLAN (no work happens during the plan), the final bookend before end-of-response sections (CODING_COMPLETE's timestamp already marks the end), AWAITING_HOOK, or HOOK_FEEDBACK. If a phase lasted less than 1 second, write `⏱️ <1s`
 
 ### Bookend Summary
 
-| Bookend | When | Position | Timestamp |
-|---------|------|----------|-----------|
-| `🚩🚩CODING_PLAN🚩🚩 [HH:MM:SS AM EST]` | Response will make changes | Very first line of response (skip if purely informational) | Required |
-| `⚡⚡CODING_START⚡⚡ [HH:MM:SS AM EST]` | Work is beginning | After coding plan bullets (or first line if no plan) | Required |
-| `📋📋PLAN_APPROVED📋📋 [HH:MM:SS AM EST]` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING_PLAN + CODING_START (only allowed repeat) | Required |
-| `✔️✔️CHECKLIST✔️✔️ [HH:MM:SS AM EST]` | A mandatory checklist is executing | Before the checklist name, during work | Required |
-| `🔍🔍RESEARCHING🔍🔍 [HH:MM:SS AM EST]` | Entering a research/exploration phase | During work, before edits begin (skip if going straight to changes) | Required |
-| `🔄🔄NEXT_PHASE🔄🔄 [HH:MM:SS AM EST]` | Work pivots to a new sub-task | During work, between phases (never repeats CODING_PLAN/CODING_START) | Required |
-| `🚧🚧BLOCKED🚧🚧 [HH:MM:SS AM EST]` | An obstacle was hit | During work, when the problem is encountered | Required |
-| `🧪🧪VERIFYING🧪🧪 [HH:MM:SS AM EST]` | Entering a verification phase | During work, after edits are applied | Required |
-| `🐟🐟AWAITING_HOOK🐟🐟 [HH:MM:SS AM EST]` | Hook conditions true after all actions | After verifying; replaces CODING_COMPLETE when hook will fire | Required |
-| `⚓⚓HOOK_FEEDBACK⚓⚓ [HH:MM:SS AM EST]` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING_PLAN as opener) | Required |
-| `🕵🕵AGENTS_USED🕵🕵` | Response performed work | First end-of-response section | — |
-| `📁📁FILES_CHANGED📁📁` | Files were modified/created/deleted | After AGENTS_USED (skip if no files changed) | — |
-| `🔗🔗COMMIT_LOG🔗🔗` | Commits were made | After FILES_CHANGED (skip if no commits made) | — |
-| `🔖🔖WORTH_NOTING🔖🔖` | Something deserves attention | After COMMIT_LOG (skip if nothing worth noting) | — |
-| `📝📝SUMMARY📝📝` | Changes were made in the response | Last section before CODING_COMPLETE | — |
-| `✅✅CODING_COMPLETE✅✅ [HH:MM:SS AM EST]` | All work done | Always the very last line of response | Required |
+| Bookend | When | Position | Timestamp | Duration |
+|---------|------|----------|-----------|----------|
+| `🚩🚩CODING_PLAN🚩🚩 [HH:MM:SS AM EST]` | Response will make changes | Very first line of response (skip if purely informational) | Required | — |
+| `⚡⚡CODING_START⚡⚡ [HH:MM:SS AM EST]` | Work is beginning | After coding plan bullets (or first line if no plan) | Required | `⏱️` before next bookend |
+| `📋📋PLAN_APPROVED📋📋 [HH:MM:SS AM EST]` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING_PLAN + CODING_START (only allowed repeat) | Required | — |
+| `✔️✔️CHECKLIST✔️✔️ [HH:MM:SS AM EST]` | A mandatory checklist is executing | Before the checklist name, during work | Required | `⏱️` before next bookend |
+| `🔍🔍RESEARCHING🔍🔍 [HH:MM:SS AM EST]` | Entering a research/exploration phase | During work, before edits begin (skip if going straight to changes) | Required | `⏱️` before next bookend |
+| `🔄🔄NEXT_PHASE🔄🔄 [HH:MM:SS AM EST]` | Work pivots to a new sub-task | During work, between phases (never repeats CODING_PLAN/CODING_START) | Required | `⏱️` before next bookend |
+| `🚧🚧BLOCKED🚧🚧 [HH:MM:SS AM EST]` | An obstacle was hit | During work, when the problem is encountered | Required | `⏱️` before next bookend |
+| `🧪🧪VERIFYING🧪🧪 [HH:MM:SS AM EST]` | Entering a verification phase | During work, after edits are applied | Required | `⏱️` before next bookend |
+| `🐟🐟AWAITING_HOOK🐟🐟 [HH:MM:SS AM EST]` | Hook conditions true after all actions | After verifying; replaces CODING_COMPLETE when hook will fire | Required | — |
+| `⚓⚓HOOK_FEEDBACK⚓⚓ [HH:MM:SS AM EST]` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING_PLAN as opener) | Required | — |
+| `⏱️ Xs` | Phase just ended | Immediately before the next bookend marker | — | Computed |
+| `🕵🕵AGENTS_USED🕵🕵` | Response performed work | First end-of-response section | — | — |
+| `📁📁FILES_CHANGED📁📁` | Files were modified/created/deleted | After AGENTS_USED (skip if no files changed) | — | — |
+| `🔗🔗COMMIT_LOG🔗🔗` | Commits were made | After FILES_CHANGED (skip if no commits made) | — | — |
+| `🔖🔖WORTH_NOTING🔖🔖` | Something deserves attention | After COMMIT_LOG (skip if nothing worth noting) | — | — |
+| `📝📝SUMMARY📝📝` | Changes were made in the response | Last section before CODING_COMPLETE | — | — |
+| `✅✅CODING_COMPLETE✅✅ [HH:MM:SS AM EST]` | All work done | Always the very last line of response | Required | — |
 
 ### Flow Examples
 
@@ -55,9 +57,11 @@
 🔍🔍RESEARCHING🔍🔍 [01:15:01 AM EST]
   ... reading files, searching codebase ...
   ... applying changes ...
+  ⏱️ 1m 29s
 ✔️✔️CHECKLIST✔️✔️ [01:16:30 AM EST]
   Pre-Commit Checklist
   ... checklist items ...
+  ⏱️ 30s
 🧪🧪VERIFYING🧪🧪 [01:17:00 AM EST]
   ... validating edits, running hook checks ...
 🕵🕵AGENTS_USED🕵🕵
@@ -80,6 +84,7 @@
 
 ⚡⚡CODING_START⚡⚡ [01:15:01 AM EST]
   ... work (commit without push) ...
+  ⏱️ 1m 44s
 🐟🐟AWAITING_HOOK🐟🐟 [01:16:45 AM EST]
   ← hook fires →
 ⚓⚓HOOK_FEEDBACK⚓⚓ [01:16:50 AM EST]
