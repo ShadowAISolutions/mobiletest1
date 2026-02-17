@@ -6,6 +6,7 @@
 - **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK FEEDBACK⚓⚓` as the first line instead of `⚡⚡CODING START⚡⚡`
 - **Hook anticipation**: before writing `✅✅CODING COMPLETE✅✅`, check whether the stop hook (`~/.claude/stop-hook-git-check.sh`) will fire. **This check must happen after all actions in the current response are complete** (including any `git push`) — do not predict the pre-action state; check the actual post-action state. **Actually run** the three git commands (do not evaluate mentally): (a) uncommitted changes — `git diff --quiet && git diff --cached --quiet`, (b) untracked files — `git ls-files --others --exclude-standard`, (c) unpushed commits — `git rev-list origin/<branch>..HEAD --count`. If any condition is true, **omit** `✅✅CODING COMPLETE✅✅` and instead write `🐟🐟AWAITING HOOK🐟🐟` as the last line of the current response — the hook will fire, and `✅✅CODING COMPLETE✅✅` should close the hook feedback response instead
 - **Summary of changes**: immediately before `✅✅CODING COMPLETE✅✅` (or `🐟🐟AWAITING HOOK🐟🐟`), output `📝📝SUMMARY OF CHANGES📝📝` on its own line followed by a concise bullet-point summary of all changes applied in the current response. This summary appears in every response that made changes (code edits, commits, pushes, file modifications). Skip the summary only if the response was purely informational with no changes made
+- **Agents used**: after the summary of changes (or after work if no summary), output `🕵🕵AGENTS USED🕵🕵` on its own line followed by a list of all agents that contributed to this response — including Agent 0 (Main). Format: `Agent N (Type) — brief description of contribution`. This appears in every response that performed work. Skip only if the response was purely informational with no actions taken
 - **Last output**: for every user prompt, the very last line written to chat after all work is done must be exactly: `✅✅CODING COMPLETE✅✅`
 - These apply to **every single user message**, not just once per session
 - These bookend lines are standalone — do not combine them with other text on the same line
@@ -18,7 +19,8 @@
 | `📋📋EXECUTION PLAN START📋📋` | Response will make changes (code edits, commits, file modifications) | After CODING START or HOOK FEEDBACK (skip if purely informational) |
 | `📄📄EXECUTION PLAN END📄📄` | Closes the execution plan block | After the last plan bullet, before work begins |
 | `⚓⚓HOOK FEEDBACK⚓⚓` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING START) |
-| `📝📝SUMMARY OF CHANGES📝📝` | Changes were made in the current response | Before CODING COMPLETE or AWAITING HOOK (skip if purely informational) |
+| `📝📝SUMMARY OF CHANGES📝📝` | Changes were made in the current response | Before AGENTS USED (skip if purely informational) |
+| `🕵🕵AGENTS USED🕵🕵` | Response performed work (changes, commits, research) | After SUMMARY OF CHANGES, before CODING COMPLETE or AWAITING HOOK |
 | `🐟🐟AWAITING HOOK🐟🐟` | Hook conditions are true after all actions complete (unpushed commits, uncommitted changes, or untracked files detected by running git commands) | Last line of response (replaces CODING COMPLETE) |
 | `✅✅CODING COMPLETE✅✅` | All work is done and no hook is anticipated | Last line of response |
 
@@ -33,6 +35,8 @@
   ... work ...
 📝📝SUMMARY OF CHANGES📝📝
   - bullet summary of changes
+🕵🕵AGENTS USED🕵🕵
+  Agent 0 (Main) — description of work done
 ✅✅CODING COMPLETE✅✅
 ```
 
@@ -45,6 +49,8 @@
   ... work (commit without push) ...
 📝📝SUMMARY OF CHANGES📝📝
   - bullet summary of changes
+🕵🕵AGENTS USED🕵🕵
+  Agent 0 (Main) — description of work done
 🐟🐟AWAITING HOOK🐟🐟
   ← hook fires →
 ⚓⚓HOOK FEEDBACK⚓⚓
@@ -65,6 +71,8 @@
   ... run git hook checks — all clean ...
 📝📝SUMMARY OF CHANGES📝📝
   - bullet summary of changes
+🕵🕵AGENTS USED🕵🕵
+  Agent 0 (Main) — description of work done
 ✅✅CODING COMPLETE✅✅
 ```
 
@@ -462,6 +470,10 @@ Agent 0 (Main) applying the changes now...
 📝📝SUMMARY OF CHANGES📝📝
   - Added auth middleware (designed by Agent 2 (Plan))
   - Updated README timestamp
+🕵🕵AGENTS USED🕵🕵
+  Agent 0 (Main) — applied changes, committed, pushed
+  Agent 1 (Explore) — searched codebase for auth patterns
+  Agent 2 (Plan) — designed implementation approach
 ✅✅CODING COMPLETE✅✅
 ```
 
