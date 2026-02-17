@@ -10,7 +10,8 @@
 - **Mid-response phase marker**: when work within a single response naturally divides into multiple distinct sub-tasks or phases (e.g. "Edit 1" then "Edit 1a: fix related issue"), output `🔄🔄NEXT PHASE🔄🔄` on its own line followed by a brief description of the new phase. **Never repeat** `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡` within the same response — those appear exactly once (at the very top). The mid-response marker keeps the top/bottom boundaries of each prompt/response turn unambiguous while still signaling transitions between sub-tasks
 - **Blocked**: output `🚧🚧BLOCKED🚧🚧` on its own line when an obstacle is hit (permission denied, merge conflict, ambiguous requirement, failed push, hook check failure). Follow with a brief description of the blocker. This makes problems immediately visible rather than buried in tool output
 - **Verifying**: output `🧪🧪VERIFYING🧪🧪` on its own line when entering a verification phase — running git hook checks, confirming no stale references, validating edits post-change. Separates "doing the work" from "checking the work"
-- **Time estimate**: output `⏳⏳ESTIMATE ≈ Xm⏳⏳` on its own line, followed by a brief reason (e.g. "~8 file edits + commit + push cycle"), in **two contexts**: (1) **Overall** — **always** appears immediately before `⚡⚡CODING START⚡⚡`, estimating the entire response from CODING PLAN to CODING COMPLETE. This gives the user an upfront sense of total wall-clock time. The overall estimate is **never skipped** — even for quick responses (e.g. `⏳⏳ESTIMATE ≈ 1m⏳⏳`). Use `Xm` for minutes or `Xs` for estimates under 1 minute. (2) **Per-phase** — immediately before any subsequent phase bookend (NEXT PHASE, RESEARCHING, CHECKLIST, etc.) whose phase alone is expected to take longer than 2 minutes. **Only output per-phase estimates when the estimate exceeds 2 minutes** — skip for phases that will be quick. Use these rough heuristics to estimate: ~10s per tool call (read, edit, grep, glob), ~15s per bash command, ~30s per commit cycle (checklist + staging + commit), ~30s per push cycle (checklist + push + verify), ~1–2m per subagent spawn. Sum the expected tool calls for the phase and round to the nearest minute. The estimate does not need a timestamp or `date` call — it is an annotation, not a bookend that participates in `⏱️` duration tracking
+- **Time estimate**: output `⏳⏳ESTIMATED TIME ≈ Xm⏳⏳` on its own line, followed by a brief reason (e.g. "~8 file edits + commit + push cycle"), in **two contexts**: (1) **Overall** — **always** appears immediately before `⚡⚡CODING START⚡⚡`, estimating the entire response from CODING PLAN to CODING COMPLETE. This gives the user an upfront sense of total wall-clock time. The overall estimate is **never skipped** — even for quick responses (e.g. `⏳⏳ESTIMATED TIME ≈ 1m⏳⏳`). Use `Xm` for minutes or `Xs` for estimates under 1 minute. (2) **Per-phase** — immediately before any subsequent phase bookend (NEXT PHASE, RESEARCHING, CHECKLIST, etc.) whose phase alone is expected to take longer than 2 minutes. **Only output per-phase estimates when the estimate exceeds 2 minutes** — skip for phases that will be quick. Use these rough heuristics to estimate: ~10s per tool call (read, edit, grep, glob), ~15s per bash command, ~30s per commit cycle (checklist + staging + commit), ~30s per push cycle (checklist + push + verify), ~1–2m per subagent spawn. Sum the expected tool calls for the phase and round to the nearest minute. The estimate does not need a timestamp or `date` call — it is an annotation, not a bookend that participates in `⏱️` duration tracking
+- **Actual time**: output `⏳⏳ACTUAL TIME: Xm Ys⏳⏳` on its own line immediately before `✅✅CODING COMPLETE✅✅`. This is the real elapsed wall-clock time from CODING START to CODING COMPLETE — computed by subtracting the CODING START timestamp from the CODING COMPLETE timestamp. **Always present** when CODING COMPLETE is written (never skipped). This pairs with the overall ESTIMATED TIME to give the user a clear before/after comparison. The `date` call for CODING COMPLETE (already required) provides the end time — no additional `date` call is needed
 - **Hook anticipation**: before writing `✅✅CODING COMPLETE✅✅`, check whether the stop hook (`~/.claude/stop-hook-git-check.sh`) will fire. **This check must happen after all actions in the current response are complete** (including any `git push`) — do not predict the pre-action state; check the actual post-action state. **Actually run** the three git commands (do not evaluate mentally): (a) uncommitted changes — `git diff --quiet && git diff --cached --quiet`, (b) untracked files — `git ls-files --others --exclude-standard`, (c) unpushed commits — `git rev-list origin/<branch>..HEAD --count`. If any condition is true, **omit** `✅✅CODING COMPLETE✅✅` and instead write `🐟🐟AWAITING HOOK🐟🐟` as the last line of the current response — the hook will fire, and `✅✅CODING COMPLETE✅✅` should close the hook feedback response instead. **Do not forget the `⏱️` duration annotation** — AWAITING HOOK is a bookend like any other, so the previous phase's `⏱️` must appear immediately before it. After the hook anticipation git commands complete, call `date`, compute the duration since the previous bookend's timestamp, write the `⏱️` line, then write AWAITING HOOK
 - **Hook feedback override**: if the triggering message is hook feedback (starts with "Stop hook feedback:", "hook feedback:", or contains `<user-prompt-submit-hook>`), use `⚓⚓HOOK FEEDBACK⚓⚓` as the first line instead of `🚩🚩CODING PLAN🚩🚩` or `⚡⚡CODING START⚡⚡`. The coding plan (if applicable) follows immediately after `⚓⚓HOOK FEEDBACK⚓⚓`, then `⚡⚡CODING START⚡⚡`
 - **End-of-response sections**: after all work is done, output the following sections in this exact order. Skip the entire block only if the response was purely informational with no changes made. **The entire block — from the `━━━` divider through CODING COMPLETE — must be written as one continuous text output with no tool calls in between.** To achieve this, run the `date` command for CODING COMPLETE's timestamp **before** starting the block, then output: the last phase's `⏱️` duration, a `━━━━━━━━━━━━━━━━━━━━━━━━━━━━` divider on its own line (Unicode heavy horizontal line — visually separating work phases from the end-of-response block), then AGENTS USED through CODING COMPLETE using the pre-fetched timestamp:
@@ -31,8 +32,8 @@
 |---------|------|----------|-----------|----------|
 | `🚩🚩CODING PLAN🚩🚩 [HH:MM:SS AM EST YYYY-MM-DD]` | Response will make changes | Very first line of response (skip if purely informational) | Required | — |
 | `⚡⚡CODING START⚡⚡ [HH:MM:SS AM EST YYYY-MM-DD]` | Work is beginning | After coding plan bullets (or first line if no plan) | Required | `⏱️` before next bookend |
-| `⏳⏳ESTIMATE ≈ Xm⏳⏳` (overall) | Every response with changes | Immediately before CODING START (never skipped) | — | — |
-| `⏳⏳ESTIMATE ≈ Xm⏳⏳` (per-phase) | Next phase estimated >2 min | Immediately before the phase's bookend marker | — | — |
+| `⏳⏳ESTIMATED TIME ≈ Xm⏳⏳` (overall) | Every response with changes | Immediately before CODING START (never skipped) | — | — |
+| `⏳⏳ESTIMATED TIME ≈ Xm⏳⏳` (per-phase) | Next phase estimated >2 min | Immediately before the phase's bookend marker | — | — |
 | `📋📋PLAN APPROVED📋📋 [HH:MM:SS AM EST]` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING PLAN + CODING START (only allowed repeat) | Required | — |
 | `✔️✔️CHECKLIST✔️✔️ [HH:MM:SS AM EST]` | A mandatory checklist is executing | Before the checklist name, during work | Required | `⏱️` before next bookend |
 | `🔍🔍RESEARCHING🔍🔍 [HH:MM:SS AM EST]` | Entering a research/exploration phase | During work, before edits begin (skip if going straight to changes) | Required | `⏱️` before next bookend |
@@ -47,7 +48,8 @@
 | `📁📁FILES CHANGED📁📁` | Files were modified/created/deleted | After AGENTS USED (skip if no files changed) | — | — |
 | `🔗🔗COMMIT LOG🔗🔗` | Commits were made | After FILES CHANGED (skip if no commits made) | — | — |
 | `🔖🔖WORTH NOTING🔖🔖` | Something deserves attention | After COMMIT LOG (skip if nothing worth noting) | — | — |
-| `📝📝SUMMARY📝📝` | Changes were made in the response | Last section before CODING COMPLETE | — | — |
+| `📝📝SUMMARY📝📝` | Changes were made in the response | Last section before ACTUAL TIME | — | — |
+| `⏳⏳ACTUAL TIME: Xm Ys⏳⏳` | Every response with CODING COMPLETE | Immediately before CODING COMPLETE (never skipped) | — | Computed from CODING START → CODING COMPLETE |
 | `✅✅CODING COMPLETE✅✅ [HH:MM:SS AM EST YYYY-MM-DD]` | All work done | Always the very last line of response | Required | — |
 
 ### Flow Examples
@@ -57,7 +59,7 @@
 🚩🚩CODING PLAN🚩🚩 [01:15:00 AM EST 2026-01-15]
   - brief bullet plan of intended changes
 
-⏳⏳ESTIMATE ≈ 3m⏳⏳ — ~6 file reads + ~8 edits + commit + push cycle
+⏳⏳ESTIMATED TIME ≈ 3m⏳⏳ — ~6 file reads + ~8 edits + commit + push cycle
 ⚡⚡CODING START⚡⚡ [01:15:01 AM EST 2026-01-15]
   ... reading files, searching codebase ...
   ... applying changes ...
@@ -80,6 +82,7 @@
 📝📝SUMMARY📝📝
   - Updated X in `file.md` (edited)
   - Created `new-file.js` (created)
+⏳⏳ACTUAL TIME: 2m 15s⏳⏳
 ✅✅CODING COMPLETE✅✅ [01:17:15 AM EST 2026-01-15]
 ```
 
@@ -88,6 +91,7 @@
 🚩🚩CODING PLAN🚩🚩 [01:15:00 AM EST 2026-01-15]
   - brief bullet plan of intended changes
 
+⏳⏳ESTIMATED TIME ≈ 3m⏳⏳ — ~4 file edits + commit + push cycle
 ⚡⚡CODING START⚡⚡ [01:15:01 AM EST 2026-01-15]
   ... work (commit without push) ...
   ⏱️ 1m 44s
@@ -107,6 +111,7 @@
 📝📝SUMMARY📝📝
   - Updated X in `file.md`
   - Pushed to remote
+⏳⏳ACTUAL TIME: 2m 9s⏳⏳
 ✅✅CODING COMPLETE✅✅ [01:17:10 AM EST 2026-01-15]
 ```
 
