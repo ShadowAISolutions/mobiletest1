@@ -91,17 +91,7 @@
 👟👟CHECKLIST RUNNING👟👟
   Pre-Commit Checklist
   ... checklist items ...
-🕵🕵AGENTS USED🕵🕵
-  Agent 0 (Main) — applied changes, ran checklists
-📁📁FILES CHANGED📁📁
-  `CLAUDE.md` (edited)
-  `README.md` (edited)
-🔗🔗COMMIT LOG🔗🔗
-  abc1234 — Update rules and fix related issue
-📝📝SUMMARY OF CHANGES📝📝
-  - Updated rule text in `CLAUDE.md`
-  - Fixed related issue in `CLAUDE.md`
-  - Updated timestamp in `README.md`
+  ... (end-of-response sections — see Normal flow above) ...
 ✅✅CODING COMPLETE✅✅
 ```
 
@@ -123,16 +113,7 @@
 
 ⚡⚡CODING START⚡⚡
   ... executing the approved plan ...
-🕵🕵AGENTS USED🕵🕵
-  Agent 0 (Main) — researched, planned, and executed
-📁📁FILES CHANGED📁📁
-  `src/middleware/auth.js` (created)
-  `README.md` (edited)
-🔗🔗COMMIT LOG🔗🔗
-  abc1234 — Add auth middleware
-📝📝SUMMARY OF CHANGES📝📝
-  - Created auth middleware in `src/middleware/auth.js`
-  - Updated timestamp in `README.md`
+  ... (end-of-response sections — see Normal flow above) ...
 ✅✅CODING COMPLETE✅✅
 ```
 
@@ -149,14 +130,7 @@
 🔄🔄NEXT PHASE🔄🔄
   User chose Option A — proceeding with implementation
   ... applying changes ...
-🕵🕵AGENTS USED🕵🕵
-  Agent 0 (Main) — researched, asked user, applied changes
-📁📁FILES CHANGED📁📁
-  `config.js` (edited)
-🔗🔗COMMIT LOG🔗🔗
-  def5678 — Update config with user preference
-📝📝SUMMARY OF CHANGES📝📝
-  - Updated configuration in `config.js` per user choice
+  ... (end-of-response sections — see Normal flow above) ...
 ✅✅CODING COMPLETE✅✅
 ```
 
@@ -167,14 +141,7 @@
 
 ⚡⚡CODING START⚡⚡
   ... work (commit without push) ...
-🕵🕵AGENTS USED🕵🕵
-  Agent 0 (Main) — description of work done
-📁📁FILES CHANGED📁📁
-  `file.md` (edited)
-🔗🔗COMMIT LOG🔗🔗
-  abc1234 — Fix bug
-📝📝SUMMARY OF CHANGES📝📝
-  - bullet summary of changes
+  ... (end-of-response sections — see Normal flow above) ...
 🐟🐟AWAITING HOOK🐟🐟
   ← hook fires →
 ⚓⚓HOOK FEEDBACK⚓⚓
@@ -195,14 +162,7 @@
   ... work (commit AND push in same response) ...
 🧪🧪VERIFYING🧪🧪
   ... run git hook checks — all clean ...
-🕵🕵AGENTS USED🕵🕵
-  Agent 0 (Main) — description of work done
-📁📁FILES CHANGED📁📁
-  `file.md` (edited)
-🔗🔗COMMIT LOG🔗🔗
-  abc1234 — Update feature
-📝📝SUMMARY OF CHANGES📝📝
-  - bullet summary of changes
+  ... (end-of-response sections — see Normal flow above) ...
 ✅✅CODING COMPLETE✅✅
 ```
 
@@ -216,8 +176,7 @@
 🚧🚧BLOCKED🚧🚧
   Push failed — branch was deleted by workflow before push completed
   ... resolution or asking user for guidance ...
-🕵🕵AGENTS USED🕵🕵
-  Agent 0 (Main) — attempted push, hit blocker
+  ... (end-of-response sections — see Normal flow above) ...
 🔖🔖WORTH NOTING🔖🔖
   Push-once already used — did not push again
 📝📝SUMMARY OF CHANGES📝📝
