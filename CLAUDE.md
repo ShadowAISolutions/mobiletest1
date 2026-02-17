@@ -24,24 +24,24 @@
 
 ### Bookend Summary
 
-| Bookend | When | Position |
+| Bookend &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; | When | Position |
 |---------|------|----------|
-| `🚩🚩CODING PLAN🚩🚩` | Response will make changes (code edits, commits, file modifications) | Very first line of response (skip if purely informational) |
+| `🚩🚩CODING PLAN🚩🚩` | Response will make changes | Very first line of response (skip if purely informational) |
 | `⚡⚡CODING START⚡⚡` | Work is beginning | After coding plan bullets (or first line if no plan) |
-| `🔄🔄NEXT PHASE🔄🔄` | Work pivots to a new sub-task within the same response | During work, between phases (never repeats CODING PLAN/CODING START) |
+| `🔄🔄NEXT PHASE🔄🔄` | Work pivots to a new sub-task | During work, between phases (never repeats CODING PLAN/CODING START) |
 | `📋📋PLAN APPROVED📋📋` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING PLAN + CODING START (only allowed repeat) |
 | `⚓⚓HOOK FEEDBACK⚓⚓` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING PLAN as opener) |
-| `👟👟CHECKLIST RUNNING👟👟` | A mandatory checklist is executing (Session Start, Pre-Commit, Pre-Push) | Before the checklist name, during work |
-| `🔍🔍RESEARCHING🔍🔍` | Entering a research/exploration phase before making changes | During work, before edits begin (skip if going straight to changes) |
-| `🧪🧪VERIFYING🧪🧪` | Entering a verification phase (hook checks, validating edits) | During work, after edits are applied |
-| `🚧🚧BLOCKED🚧🚧` | An obstacle was hit (permission denied, merge conflict, failed push, etc.) | During work, when the problem is encountered |
-| `🕵🕵AGENTS USED🕵🕵` | Response performed work (changes, commits, research) | After all work, first end-of-response section |
-| `📁📁FILES CHANGED📁📁` | Files were modified, created, or deleted in the response | After AGENTS USED (skip if no files changed) |
-| `🔗🔗COMMIT LOG🔗🔗` | Commits were made in the response | After FILES CHANGED (skip if no commits made) |
-| `🔖🔖WORTH NOTING🔖🔖` | Something deserves attention but isn't a blocker | After COMMIT LOG (skip if nothing worth noting) |
-| `📝📝SUMMARY OF CHANGES📝📝` | Changes were made in the current response | Last section before CODING COMPLETE (skip if purely informational) |
-| `🐟🐟AWAITING HOOK🐟🐟` | Hook conditions are true after all actions complete (unpushed commits, uncommitted changes, or untracked files detected by running git commands) | Last line of response (replaces CODING COMPLETE) |
-| `✅✅CODING COMPLETE✅✅` | All work is done and no hook is anticipated | Last line of response |
+| `👟👟CHECKLIST RUNNING👟👟` | A mandatory checklist is executing | Before the checklist name, during work |
+| `🔍🔍RESEARCHING🔍🔍` | Entering a research/exploration phase | During work, before edits begin (skip if going straight to changes) |
+| `🧪🧪VERIFYING🧪🧪` | Entering a verification phase | During work, after edits are applied |
+| `🚧🚧BLOCKED🚧🚧` | An obstacle was hit | During work, when the problem is encountered |
+| `🕵🕵AGENTS USED🕵🕵` | Response performed work | After all work, first end-of-response section |
+| `📁📁FILES CHANGED📁📁` | Files were modified/created/deleted | After AGENTS USED (skip if no files changed) |
+| `🔗🔗COMMIT LOG🔗🔗` | Commits were made | After FILES CHANGED (skip if no commits made) |
+| `🔖🔖WORTH NOTING🔖🔖` | Something deserves attention | After COMMIT LOG (skip if nothing worth noting) |
+| `📝📝SUMMARY OF CHANGES📝📝` | Changes were made in the response | Last section before CODING COMPLETE (skip if purely informational) |
+| `🐟🐟AWAITING HOOK🐟🐟` | Hook conditions true after all actions | Last line of response (replaces CODING COMPLETE) |
+| `✅✅CODING COMPLETE✅✅` | All work done, no hook anticipated | Last line of response |
 
 ### Flow Examples
 
