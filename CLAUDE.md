@@ -28,7 +28,6 @@
 |---------|------|----------|
 | `🚩🚩CODING_PLAN🚩🚩` | Response will make changes | Very first line of response (skip if purely informational) |
 | `⚡⚡CODING_START⚡⚡` | Work is beginning | After coding plan bullets (or first line if no plan) |
-| `⚓⚓HOOK_FEEDBACK⚓⚓` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING_PLAN as opener) |
 | `📋📋PLAN_APPROVED📋📋` | User approved a plan via ExitPlanMode | Before execution begins; followed by CODING_PLAN + CODING_START (only allowed repeat) |
 | `✔️✔️CHECKLIST✔️✔️` | A mandatory checklist is executing | Before the checklist name, during work |
 | `🔍🔍RESEARCHING🔍🔍` | Entering a research/exploration phase | During work, before edits begin (skip if going straight to changes) |
@@ -41,6 +40,7 @@
 | `🔖🔖WORTH_NOTING🔖🔖` | Something deserves attention | After COMMIT_LOG (skip if nothing worth noting) |
 | `📝📝SUMMARY📝📝` | Changes were made in the response | Last section before CODING_COMPLETE (skip if purely informational) |
 | `🐟🐟AWAITING_HOOK🐟🐟` | Hook conditions true after all actions | Last line of response (replaces CODING_COMPLETE) |
+| `⚓⚓HOOK_FEEDBACK⚓⚓` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING_PLAN as opener) |
 | `✅✅CODING_COMPLETE✅✅` | All work done, no hook anticipated | Last line of response |
 
 ### Flow Examples
