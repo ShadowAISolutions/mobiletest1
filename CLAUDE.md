@@ -8,6 +8,35 @@
 - These apply to **every single user message**, not just once per session
 - These bookend lines are standalone — do not combine them with other text on the same line
 
+### Bookend Summary
+
+| Bookend | When | Position |
+|---------|------|----------|
+| `⚡⚡CODING START⚡⚡` | User sends a message | First line of response |
+| `⚓⚓HOOK FEEDBACK⚓⚓` | Hook feedback triggers a follow-up | First line of hook response (replaces CODING START) |
+| `🐟🐟AWAITING HOOK🐟🐟` | Hook is anticipated (unpushed commits, uncommitted changes, or untracked files detected) | Last line of response (replaces CODING COMPLETE) |
+| `✅✅CODING COMPLETE✅✅` | All work is done and no hook is anticipated | Last line of response |
+
+### Flow Examples
+
+**Normal flow (no hook):**
+```
+⚡⚡CODING START⚡⚡
+  ... work ...
+✅✅CODING COMPLETE✅✅
+```
+
+**Hook anticipated flow:**
+```
+⚡⚡CODING START⚡⚡
+  ... work (commit without push) ...
+🐟🐟AWAITING HOOK🐟🐟
+  ← hook fires →
+⚓⚓HOOK FEEDBACK⚓⚓
+  ... push ...
+✅✅CODING COMPLETE✅✅
+```
+
 ---
 > **--- END OF CHAT BOOKENDS ---**
 ---
