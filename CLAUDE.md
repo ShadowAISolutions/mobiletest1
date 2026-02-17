@@ -8,11 +8,12 @@
 - **Verifying**: output `🧪🧪VERIFYING🧪🧪` on its own line when entering a verification phase — running git hook checks, confirming no stale references, validating edits post-change. Separates "doing the work" from "checking the work"
 - **Blocked**: output `🚧🚧BLOCKED🚧🚧` on its own line when an obstacle is hit (permission denied, merge conflict, ambiguous requirement, failed push, hook check failure). Follow with a brief description of the blocker. This makes problems immediately visible rather than buried in tool output
 - **Hook anticipation**: before writing `✅✅CODING COMPLETE✅✅`, check whether the stop hook (`~/.claude/stop-hook-git-check.sh`) will fire. **This check must happen after all actions in the current response are complete** (including any `git push`) — do not predict the pre-action state; check the actual post-action state. **Actually run** the three git commands (do not evaluate mentally): (a) uncommitted changes — `git diff --quiet && git diff --cached --quiet`, (b) untracked files — `git ls-files --others --exclude-standard`, (c) unpushed commits — `git rev-list origin/<branch>..HEAD --count`. If any condition is true, **omit** `✅✅CODING COMPLETE✅✅` and instead write `🐟🐟AWAITING HOOK🐟🐟` as the last line of the current response — the hook will fire, and `✅✅CODING COMPLETE✅✅` should close the hook feedback response instead
-- **Summary of changes**: immediately before `✅✅CODING COMPLETE✅✅` (or `🐟🐟AWAITING HOOK🐟🐟`), output `📝📝SUMMARY OF CHANGES📝📝` on its own line followed by a concise bullet-point summary of all changes applied in the current response. Each bullet must indicate which file(s) were edited (e.g. "Updated build-version in `live-site-pages/index.html`"). If a bullet describes a non-file action (e.g. "Pushed to remote"), no file path is needed. This summary appears in every response that made changes (code edits, commits, pushes, file modifications). Skip the summary only if the response was purely informational with no changes made. The following four sub-sections appear within the summary block (between SUMMARY OF CHANGES and CODING COMPLETE), each on its own line:
+- **End-of-response sections**: after all work is done and before `✅✅CODING COMPLETE✅✅` (or `🐟🐟AWAITING HOOK🐟🐟`), output the following sections in this exact order. Skip the entire block only if the response was purely informational with no changes made:
   - **Agents used**: output `🕵🕵AGENTS USED🕵🕵` followed by a list of all agents that contributed to this response — including Agent 0 (Main). Format: `Agent N (Type) — brief description of contribution`. This appears in every response that performed work. Skip only if the response was purely informational with no actions taken
   - **Files changed**: output `📁📁FILES CHANGED📁📁` followed by a list of every file modified in the response, each tagged with the type of change: `(edited)`, `(created)`, or `(deleted)`. This gives a clean at-a-glance file manifest. Skip if no files were changed in the response
   - **Commit log**: output `🔗🔗COMMIT LOG🔗🔗` followed by a list of every commit made in the response, formatted as `SHORT_SHA — commit message`. Skip if no commits were made in the response
   - **Warnings**: output `⚠️⚠️WARNINGS⚠️⚠️` followed by a list of anything that deserves attention but isn't a blocker (e.g. "Push-once already used — did not push again", "Template repo guard skipped version bumps", "Pre-commit hook modified files — re-staged"). Skip if there are no warnings
+  - **Summary of changes**: output `📝📝SUMMARY OF CHANGES📝📝` on its own line followed by a concise bullet-point summary of all changes applied in the current response. Each bullet must indicate which file(s) were edited (e.g. "Updated build-version in `live-site-pages/index.html`"). If a bullet describes a non-file action (e.g. "Pushed to remote"), no file path is needed. This is the last section before `✅✅CODING COMPLETE✅✅` (or `🐟🐟AWAITING HOOK🐟🐟`)
 - **Last output**: for every user prompt, the very last line written to chat after all work is done must be exactly: `✅✅CODING COMPLETE✅✅`
 - These apply to **every single user message**, not just once per session
 - These bookend lines are standalone — do not combine them with other text on the same line
@@ -28,11 +29,11 @@
 | `🔍🔍RESEARCHING🔍🔍` | Entering a research/exploration phase before making changes | During work, before edits begin (skip if going straight to changes) |
 | `🧪🧪VERIFYING🧪🧪` | Entering a verification phase (hook checks, validating edits) | During work, after edits are applied |
 | `🚧🚧BLOCKED🚧🚧` | An obstacle was hit (permission denied, merge conflict, failed push, etc.) | During work, when the problem is encountered |
-| `📝📝SUMMARY OF CHANGES📝📝` | Changes were made in the current response | After all work, before CODING COMPLETE (skip if purely informational) |
-| &emsp;`🕵🕵AGENTS USED🕵🕵` | Response performed work (changes, commits, research) | Within summary block, after change bullets |
-| &emsp;`📁📁FILES CHANGED📁📁` | Files were modified, created, or deleted in the response | Within summary block, after AGENTS USED (skip if no files changed) |
-| &emsp;`🔗🔗COMMIT LOG🔗🔗` | Commits were made in the response | Within summary block, after FILES CHANGED (skip if no commits made) |
-| &emsp;`⚠️⚠️WARNINGS⚠️⚠️` | Something deserves attention but isn't a blocker | Within summary block, after COMMIT LOG (skip if no warnings) |
+| `🕵🕵AGENTS USED🕵🕵` | Response performed work (changes, commits, research) | After all work, first end-of-response section |
+| `📁📁FILES CHANGED📁📁` | Files were modified, created, or deleted in the response | After AGENTS USED (skip if no files changed) |
+| `🔗🔗COMMIT LOG🔗🔗` | Commits were made in the response | After FILES CHANGED (skip if no commits made) |
+| `⚠️⚠️WARNINGS⚠️⚠️` | Something deserves attention but isn't a blocker | After COMMIT LOG (skip if no warnings) |
+| `📝📝SUMMARY OF CHANGES📝📝` | Changes were made in the current response | Last section before CODING COMPLETE (skip if purely informational) |
 | `🐟🐟AWAITING HOOK🐟🐟` | Hook conditions are true after all actions complete (unpushed commits, uncommitted changes, or untracked files detected by running git commands) | Last line of response (replaces CODING COMPLETE) |
 | `✅✅CODING COMPLETE✅✅` | All work is done and no hook is anticipated | Last line of response |
 
@@ -52,9 +53,6 @@
   ... checklist items ...
 🧪🧪VERIFYING🧪🧪
   ... validating edits, running hook checks ...
-📝📝SUMMARY OF CHANGES📝📝
-  - Updated X in `file.md` (edited)
-  - Created `new-file.js` (created)
 🕵🕵AGENTS USED🕵🕵
   Agent 0 (Main) — applied changes, ran checklists
 📁📁FILES CHANGED📁📁
@@ -62,6 +60,9 @@
   `new-file.js` (created)
 🔗🔗COMMIT LOG🔗🔗
   abc1234 — Add feature X
+📝📝SUMMARY OF CHANGES📝📝
+  - Updated X in `file.md` (edited)
+  - Created `new-file.js` (created)
 ✅✅CODING COMPLETE✅✅
 ```
 
@@ -72,14 +73,14 @@
 
 ⚡⚡CODING START⚡⚡
   ... work (commit without push) ...
-📝📝SUMMARY OF CHANGES📝📝
-  - bullet summary of changes
 🕵🕵AGENTS USED🕵🕵
   Agent 0 (Main) — description of work done
 📁📁FILES CHANGED📁📁
   `file.md` (edited)
 🔗🔗COMMIT LOG🔗🔗
   abc1234 — Fix bug
+📝📝SUMMARY OF CHANGES📝📝
+  - bullet summary of changes
 🐟🐟AWAITING HOOK🐟🐟
   ← hook fires →
 ⚓⚓HOOK FEEDBACK⚓⚓
@@ -100,14 +101,14 @@
   ... work (commit AND push in same response) ...
 🧪🧪VERIFYING🧪🧪
   ... run git hook checks — all clean ...
-📝📝SUMMARY OF CHANGES📝📝
-  - bullet summary of changes
 🕵🕵AGENTS USED🕵🕵
   Agent 0 (Main) — description of work done
 📁📁FILES CHANGED📁📁
   `file.md` (edited)
 🔗🔗COMMIT LOG🔗🔗
   abc1234 — Update feature
+📝📝SUMMARY OF CHANGES📝📝
+  - bullet summary of changes
 ✅✅CODING COMPLETE✅✅
 ```
 
@@ -121,12 +122,12 @@
 🚧🚧BLOCKED🚧🚧
   Push failed — branch was deleted by workflow before push completed
   ... resolution or asking user for guidance ...
-📝📝SUMMARY OF CHANGES📝📝
-  - bullet summary of what was accomplished
 🕵🕵AGENTS USED🕵🕵
   Agent 0 (Main) — attempted push, hit blocker
 ⚠️⚠️WARNINGS⚠️⚠️
   Push-once already used — did not push again
+📝📝SUMMARY OF CHANGES📝📝
+  - bullet summary of what was accomplished
 ✅✅CODING COMPLETE✅✅
 ```
 
@@ -519,9 +520,6 @@ When subagents (Explore, Plan, Bash, etc.) are spawned via the Task tool, their 
 Applying the changes now...
   ... work ...
 
-📝📝SUMMARY OF CHANGES📝📝
-  - Added auth middleware in `src/middleware/auth.js` ([Agent 2 (Plan)] designed the approach)
-  - Updated timestamp in `README.md`
 🕵🕵AGENTS USED🕵🕵
   Agent 0 (Main) — applied changes, committed, pushed
   Agent 1 (Explore) — searched codebase for auth patterns
@@ -531,6 +529,9 @@ Applying the changes now...
   `README.md` (edited)
 🔗🔗COMMIT LOG🔗🔗
   def5678 — Add auth middleware
+📝📝SUMMARY OF CHANGES📝📝
+  - Added auth middleware in `src/middleware/auth.js` ([Agent 2 (Plan)] designed the approach)
+  - Updated timestamp in `README.md`
 ✅✅CODING COMPLETE✅✅
 ```
 
