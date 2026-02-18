@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="build-version" content="01.00w">
+  <meta name="build-version" content="01.01w">
   <meta name="template-id" content="sais-aut-7f3e9b2d">
   <title>CHANGE THIS PROJECT TITLE TEMPLATE</title>
   <style>
@@ -36,7 +36,159 @@
 <body>
   <div id="splash-green" class="splash"><div class="splash-title">Website Ready</div><img id="splash-logo" src="" alt=""></div>
 
-  <!-- YOUR PAGE CONTENT HERE -->
+  <canvas id="particle-bg"></canvas>
+  <style>
+    #particle-bg {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0; background: #0a0a1a; touch-action: none;
+    }
+  </style>
+
+  <script>
+    (function() {
+      var canvas = document.getElementById('particle-bg');
+      var ctx = canvas.getContext('2d');
+      var particles = [];
+      var pointer = { x: -1000, y: -1000, active: false };
+      var PARTICLE_COUNT = 120;
+      var CONNECT_DIST = 140;
+      var POINTER_RADIUS = 180;
+      var BASE_SPEED = 0.4;
+
+      function resize() {
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      window.addEventListener('resize', resize);
+      resize();
+
+      function Particle() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.vx = (Math.random() - 0.5) * BASE_SPEED * 2;
+        this.vy = (Math.random() - 0.5) * BASE_SPEED * 2;
+        this.radius = Math.random() * 2.5 + 1;
+        this.baseAlpha = Math.random() * 0.5 + 0.3;
+        this.alpha = this.baseAlpha;
+        this.hue = 200 + Math.random() * 60;
+      }
+
+      for (var i = 0; i < PARTICLE_COUNT; i++) {
+        particles.push(new Particle());
+      }
+
+      function handlePointer(e) {
+        var touch = e.touches ? e.touches[0] : e;
+        pointer.x = touch.clientX;
+        pointer.y = touch.clientY;
+        pointer.active = true;
+      }
+
+      function handlePointerEnd() {
+        pointer.active = false;
+      }
+
+      canvas.addEventListener('mousemove', handlePointer);
+      canvas.addEventListener('touchmove', function(e) { e.preventDefault(); handlePointer(e); }, { passive: false });
+      canvas.addEventListener('touchstart', function(e) { e.preventDefault(); handlePointer(e); }, { passive: false });
+      canvas.addEventListener('mousedown', handlePointer);
+      canvas.addEventListener('mouseleave', handlePointerEnd);
+      canvas.addEventListener('touchend', handlePointerEnd);
+      canvas.addEventListener('touchcancel', handlePointerEnd);
+
+      // Spawn burst of particles on tap/click
+      canvas.addEventListener('click', function(e) {
+        for (var j = 0; j < 8; j++) {
+          var angle = (Math.PI * 2 / 8) * j;
+          var p = new Particle();
+          p.x = e.clientX;
+          p.y = e.clientY;
+          p.vx = Math.cos(angle) * 2.5;
+          p.vy = Math.sin(angle) * 2.5;
+          p.radius = 2;
+          p.alpha = 1;
+          p.hue = 280 + Math.random() * 60;
+          p.life = 80;
+          particles.push(p);
+        }
+      });
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        for (var i = particles.length - 1; i >= 0; i--) {
+          var p = particles[i];
+
+          // Life-limited burst particles
+          if (p.life !== undefined) {
+            p.life--;
+            if (p.life <= 0) { particles.splice(i, 1); continue; }
+            p.alpha = (p.life / 80) * 0.9;
+            p.vx *= 0.97;
+            p.vy *= 0.97;
+          }
+
+          // Pointer interaction — attract toward pointer when active
+          if (pointer.active) {
+            var dx = pointer.x - p.x;
+            var dy = pointer.y - p.y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < POINTER_RADIUS && dist > 1) {
+              var force = (1 - dist / POINTER_RADIUS) * 0.08;
+              p.vx += (dx / dist) * force;
+              p.vy += (dy / dist) * force;
+              p.alpha = Math.min(1, p.baseAlpha + (1 - dist / POINTER_RADIUS) * 0.5);
+            } else if (p.life === undefined) {
+              p.alpha += (p.baseAlpha - p.alpha) * 0.05;
+            }
+          } else if (p.life === undefined) {
+            p.alpha += (p.baseAlpha - p.alpha) * 0.05;
+          }
+
+          // Speed damping
+          var speed = Math.sqrt(p.vx * p.vx + p.vy * p.vy);
+          if (speed > 2) { p.vx *= 0.98; p.vy *= 0.98; }
+
+          p.x += p.vx;
+          p.y += p.vy;
+
+          // Wrap around edges
+          if (p.x < -10) p.x = canvas.width + 10;
+          if (p.x > canvas.width + 10) p.x = -10;
+          if (p.y < -10) p.y = canvas.height + 10;
+          if (p.y > canvas.height + 10) p.y = -10;
+
+          // Draw particle
+          ctx.beginPath();
+          ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+          ctx.fillStyle = 'hsla(' + p.hue + ', 80%, 65%, ' + p.alpha + ')';
+          ctx.fill();
+        }
+
+        // Draw connections between nearby particles
+        for (var i = 0; i < particles.length; i++) {
+          for (var j = i + 1; j < particles.length; j++) {
+            var a = particles[i], b = particles[j];
+            var dx = a.x - b.x;
+            var dy = a.y - b.y;
+            var dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < CONNECT_DIST) {
+              var lineAlpha = (1 - dist / CONNECT_DIST) * 0.15 * Math.min(a.alpha, b.alpha);
+              ctx.beginPath();
+              ctx.moveTo(a.x, a.y);
+              ctx.lineTo(b.x, b.y);
+              ctx.strokeStyle = 'hsla(220, 60%, 60%, ' + lineAlpha + ')';
+              ctx.lineWidth = 0.6;
+              ctx.stroke();
+            }
+          }
+        }
+
+        requestAnimationFrame(animate);
+      }
+      animate();
+    })();
+  </script>
 
   <script>
     /* tpl:7f3e9b2d */ // ── CONFIG ──────────────────────────────────────────────────────────
