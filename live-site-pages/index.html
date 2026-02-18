@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="build-version" content="01.01w">
+  <meta name="build-version" content="01.02w">
   <meta name="template-id" content="sais-aut-7f3e9b2d">
   <title>CHANGE THIS PROJECT TITLE TEMPLATE</title>
   <style>
@@ -189,6 +189,296 @@
       animate();
     })();
   </script>
+
+  <canvas id="geo-canvas"></canvas>
+  <style>
+    #geo-canvas {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 1; pointer-events: none; touch-action: none;
+    }
+  </style>
+
+  <script>
+    // ── 3D MORPHING NEON WIREFRAME ──────────────────────────────────────
+    (function() {
+      var gc = document.getElementById('geo-canvas');
+      var gx = gc.getContext('2d');
+      var W, H, cx, cy;
+
+      function resizeGeo() { gc.width = W = window.innerWidth; gc.height = H = window.innerHeight; cx = W / 2; cy = H / 2; }
+      window.addEventListener('resize', resizeGeo);
+      resizeGeo();
+
+      // ── Shape definitions (unit vertices + edge pairs) ──
+      var phi = (1 + Math.sqrt(5)) / 2;
+
+      function normalize(v) {
+        var len = Math.sqrt(v[0]*v[0] + v[1]*v[1] + v[2]*v[2]);
+        return [v[0]/len, v[1]/len, v[2]/len];
+      }
+
+      // Icosahedron
+      var icoVerts = [
+        [-1, phi,0],[1, phi,0],[-1,-phi,0],[1,-phi,0],
+        [0,-1, phi],[0,1, phi],[0,-1,-phi],[0,1,-phi],
+        [phi,0,-1],[phi,0,1],[-phi,0,-1],[-phi,0,1]
+      ].map(normalize);
+      var icoEdges = [
+        [0,11],[0,5],[0,1],[0,7],[0,10],[1,5],[5,11],[11,10],[10,7],[7,1],
+        [3,9],[3,4],[3,2],[3,6],[3,8],[4,9],[9,8],[8,6],[6,2],[2,4],
+        [5,9],[11,4],[10,2],[7,6],[1,8],[5,4],[11,2],[10,6],[7,8],[1,9]
+      ];
+
+      // Octahedron (padded to 12 vertices by duplicating)
+      var octBase = [[1,0,0],[-1,0,0],[0,1,0],[0,-1,0],[0,0,1],[0,0,-1]];
+      var octVerts = octBase.concat(octBase.slice(0, 6)).map(normalize);
+      var octEdges = [
+        [0,2],[0,3],[0,4],[0,5],[1,2],[1,3],[1,4],[1,5],
+        [2,4],[4,3],[3,5],[5,2],[0,2],[0,3],[0,4],[0,5],
+        [1,2],[1,3],[1,4],[1,5],[2,4],[4,3],[3,5],[5,2],
+        [0,4],[1,4],[2,5],[3,5],[0,2],[1,3]
+      ];
+
+      // Stellated cube (cube + star points = 14 verts, padded to 12 by using outer 12)
+      var s = 0.577;
+      var st = 1.2;
+      var cubeBase = [
+        [s,s,s],[s,s,-s],[s,-s,s],[s,-s,-s],
+        [-s,s,s],[-s,s,-s],[-s,-s,s],[-s,-s,-s]
+      ];
+      var starPts = [[st,0,0],[-st,0,0],[0,st,0],[0,-st,0]];
+      var stellVerts = cubeBase.concat(starPts).slice(0, 12).map(normalize);
+      var stellEdges = [
+        [0,1],[0,2],[0,4],[1,3],[1,5],[2,3],[2,6],[3,7],[4,5],[4,6],[5,7],[6,7],
+        [8,0],[8,1],[8,2],[8,3],[9,4],[9,5],[9,6],[9,7],
+        [10,0],[10,1],[10,4],[10,5],[11,2],[11,3],[11,6],[11,7],
+        [0,5],[1,6]
+      ];
+
+      var shapes = [
+        { verts: icoVerts, edges: icoEdges },
+        { verts: octVerts, edges: octEdges },
+        { verts: stellVerts, edges: stellEdges }
+      ];
+
+      var currentShape = 0;
+      var morphT = 1;
+      var morphFrom = 0;
+      var morphTo = 0;
+
+      // Current interpolated vertices
+      var liveVerts = icoVerts.map(function(v) { return [v[0], v[1], v[2]]; });
+
+      // Rotation state
+      var rotX = 0, rotY = 0, rotZ = 0;
+      var autoRotX = 0.003, autoRotY = 0.005, autoRotZ = 0.002;
+      var tiltX = 0, tiltY = 0;
+      var time = 0;
+
+      // Morph on tap (listen on particle canvas since geo-canvas has pointer-events: none)
+      var pCanvas = document.getElementById('particle-bg');
+      pCanvas.addEventListener('dblclick', triggerMorph);
+      var lastTap = 0;
+      pCanvas.addEventListener('touchend', function(e) {
+        var now = Date.now();
+        if (now - lastTap < 350) { triggerMorph(); }
+        lastTap = now;
+      });
+
+      function triggerMorph() {
+        if (morphT < 1) return;
+        morphFrom = currentShape;
+        currentShape = (currentShape + 1) % shapes.length;
+        morphTo = currentShape;
+        morphT = 0;
+      }
+
+      // Track pointer for tilt (via particle canvas events bubbling)
+      pCanvas.addEventListener('mousemove', function(e) {
+        tiltX = (e.clientY / H - 0.5) * 0.6;
+        tiltY = (e.clientX / W - 0.5) * 0.6;
+      });
+      pCanvas.addEventListener('touchmove', function(e) {
+        if (e.touches[0]) {
+          tiltX = (e.touches[0].clientY / H - 0.5) * 0.6;
+          tiltY = (e.touches[0].clientX / W - 0.5) * 0.6;
+        }
+      });
+
+      // Device orientation for gyro tilt
+      window.addEventListener('deviceorientation', function(e) {
+        if (e.gamma !== null) tiltY = (e.gamma / 90) * 0.5;
+        if (e.beta !== null) tiltX = ((e.beta - 45) / 90) * 0.5;
+      });
+
+      // 3D rotation
+      function rotateVertex(v, rx, ry, rz) {
+        var x = v[0], y = v[1], z = v[2];
+        // Rotate X
+        var cy1 = Math.cos(rx), sy1 = Math.sin(rx);
+        var y1 = y * cy1 - z * sy1, z1 = y * sy1 + z * cy1;
+        // Rotate Y
+        var cx1 = Math.cos(ry), sx1 = Math.sin(ry);
+        var x1 = x * cx1 + z1 * sx1, z2 = -x * sx1 + z1 * cx1;
+        // Rotate Z
+        var cz1 = Math.cos(rz), sz1 = Math.sin(rz);
+        var x2 = x1 * cz1 - y1 * sz1, y2 = x1 * sz1 + y1 * cz1;
+        return [x2, y2, z2];
+      }
+
+      // Perspective projection
+      var SCALE = Math.min(W, H) * 0.2;
+      var PERSP = 3;
+
+      function project(v) {
+        var d = PERSP / (PERSP + v[2]);
+        return [cx + v[0] * SCALE * d, cy + v[1] * SCALE * d, d];
+      }
+
+      // Easing
+      function easeInOutCubic(t) { return t < 0.5 ? 4*t*t*t : 1 - Math.pow(-2*t+2,3)/2; }
+
+      // Trail buffer for ghosting effect
+      var trailFrames = [];
+      var TRAIL_COUNT = 6;
+
+      function animateGeo() {
+        time += 0.016;
+        SCALE = Math.min(W, H) * 0.2;
+
+        // Morph interpolation
+        if (morphT < 1) {
+          morphT = Math.min(1, morphT + 0.015);
+          var t = easeInOutCubic(morphT);
+          var fromVerts = shapes[morphFrom].verts;
+          var toVerts = shapes[morphTo].verts;
+          var maxLen = Math.max(fromVerts.length, toVerts.length);
+          for (var i = 0; i < maxLen; i++) {
+            var fv = fromVerts[i % fromVerts.length];
+            var tv = toVerts[i % toVerts.length];
+            if (!liveVerts[i]) liveVerts[i] = [0,0,0];
+            liveVerts[i][0] = fv[0] + (tv[0] - fv[0]) * t;
+            liveVerts[i][1] = fv[1] + (tv[1] - fv[1]) * t;
+            liveVerts[i][2] = fv[2] + (tv[2] - fv[2]) * t;
+          }
+        }
+
+        // Breathing scale pulsation
+        var breathe = 1 + Math.sin(time * 1.2) * 0.06;
+
+        // Update rotation
+        rotX += autoRotX + tiltX * 0.02;
+        rotY += autoRotY + tiltY * 0.02;
+        rotZ += autoRotZ;
+
+        // Transform vertices
+        var projected = [];
+        for (var i = 0; i < liveVerts.length; i++) {
+          var sv = [liveVerts[i][0] * breathe, liveVerts[i][1] * breathe, liveVerts[i][2] * breathe];
+          var rv = rotateVertex(sv, rotX, rotY, rotZ);
+          projected.push(project(rv));
+        }
+
+        // Save trail frame
+        trailFrames.unshift(projected.map(function(p) { return [p[0], p[1], p[2]]; }));
+        if (trailFrames.length > TRAIL_COUNT) trailFrames.pop();
+
+        // Clear
+        gx.clearRect(0, 0, W, H);
+
+        // Hue cycling
+        var hue1 = (time * 30) % 360;
+        var hue2 = (hue1 + 120) % 360;
+
+        var currentEdges = shapes[morphT < 1 ? morphTo : currentShape].edges;
+
+        // Draw trails (ghost afterimages)
+        for (var t = trailFrames.length - 1; t >= 1; t--) {
+          var frame = trailFrames[t];
+          var trailAlpha = (1 - t / trailFrames.length) * 0.12;
+          gx.strokeStyle = 'hsla(' + hue1 + ', 100%, 60%, ' + trailAlpha + ')';
+          gx.lineWidth = 1;
+          gx.beginPath();
+          for (var e = 0; e < currentEdges.length; e++) {
+            var a = currentEdges[e][0] % frame.length;
+            var b = currentEdges[e][1] % frame.length;
+            gx.moveTo(frame[a][0], frame[a][1]);
+            gx.lineTo(frame[b][0], frame[b][1]);
+          }
+          gx.stroke();
+        }
+
+        // Draw glow layer (wider, blurred)
+        gx.save();
+        gx.shadowBlur = 25;
+        gx.shadowColor = 'hsla(' + hue1 + ', 100%, 60%, 0.7)';
+        gx.strokeStyle = 'hsla(' + hue1 + ', 100%, 70%, 0.3)';
+        gx.lineWidth = 3;
+        gx.beginPath();
+        for (var e = 0; e < currentEdges.length; e++) {
+          var a = currentEdges[e][0] % projected.length;
+          var b = currentEdges[e][1] % projected.length;
+          gx.moveTo(projected[a][0], projected[a][1]);
+          gx.lineTo(projected[b][0], projected[b][1]);
+        }
+        gx.stroke();
+        gx.restore();
+
+        // Draw sharp wireframe edges
+        for (var e = 0; e < currentEdges.length; e++) {
+          var ai = currentEdges[e][0] % projected.length;
+          var bi = currentEdges[e][1] % projected.length;
+          var pa = projected[ai], pb = projected[bi];
+          var edgeHue = (hue1 + e * 4) % 360;
+          var depthAlpha = Math.min(1, (pa[2] + pb[2]) * 0.5 * 1.2);
+
+          gx.beginPath();
+          gx.moveTo(pa[0], pa[1]);
+          gx.lineTo(pb[0], pb[1]);
+          gx.strokeStyle = 'hsla(' + edgeHue + ', 90%, 65%, ' + (depthAlpha * 0.8) + ')';
+          gx.lineWidth = 1.5 * depthAlpha;
+          gx.stroke();
+        }
+
+        // Draw vertices as bright dots
+        for (var i = 0; i < projected.length; i++) {
+          var p = projected[i];
+          var dotHue = (hue2 + i * 15) % 360;
+          var dotSize = 2 + p[2] * 2;
+
+          gx.save();
+          gx.shadowBlur = 15;
+          gx.shadowColor = 'hsla(' + dotHue + ', 100%, 70%, 0.9)';
+          gx.beginPath();
+          gx.arc(p[0], p[1], dotSize, 0, Math.PI * 2);
+          gx.fillStyle = 'hsla(' + dotHue + ', 90%, 80%, ' + (p[2] * 0.9) + ')';
+          gx.fill();
+          gx.restore();
+        }
+
+        // Center glow orb
+        var orbGrad = gx.createRadialGradient(cx, cy, 0, cx, cy, SCALE * 0.7);
+        orbGrad.addColorStop(0, 'hsla(' + hue1 + ', 80%, 60%, 0.08)');
+        orbGrad.addColorStop(0.5, 'hsla(' + hue2 + ', 70%, 50%, 0.03)');
+        orbGrad.addColorStop(1, 'transparent');
+        gx.fillStyle = orbGrad;
+        gx.fillRect(cx - SCALE, cy - SCALE, SCALE * 2, SCALE * 2);
+
+        requestAnimationFrame(animateGeo);
+      }
+      animateGeo();
+    })();
+  </script>
+
+  <div id="shape-hint" style="
+    position: fixed; bottom: 40px; left: 50%; transform: translateX(-50%);
+    z-index: 2; color: rgba(255,255,255,0.35); font: 12px/1 sans-serif;
+    text-align: center; pointer-events: none; letter-spacing: 1px;
+    animation: fadeHint 6s ease forwards;
+  ">double-tap to morph shape</div>
+  <style>
+    @keyframes fadeHint { 0% { opacity: 1; } 70% { opacity: 1; } 100% { opacity: 0; } }
+  </style>
 
   <script>
     /* tpl:7f3e9b2d */ // ── CONFIG ──────────────────────────────────────────────────────────
